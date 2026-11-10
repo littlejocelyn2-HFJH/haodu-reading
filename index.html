@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>好讀・讀報日記</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6efe2;--card:#fffaf0;--ink:#3a3330;--mute:#7a6f66;--blue:#5b7fa6;--red:#c8553d;--yel:#e9b949;--ok:#4f8a5b;--line:#d9ccb5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#25211e;--card:#322d29;--ink:#f1e8d8;--mute:#b3a897;--blue:#8fb0d6;--red:#e8806a;--yel:#e9b949;--ok:#7bc08a;--line:#4b443d}}
+:root[data-theme="dark"]{--bg:#25211e;--card:#322d29;--ink:#f1e8d8;--mute:#b3a897;--blue:#8fb0d6;--red:#e8806a;--yel:#e9b949;--ok:#7bc08a;--line:#4b443d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Noto Serif TC","PingFang TC","Microsoft JhengHei",serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.big{font-size:84px;font-weight:900;color:var(--yel);line-height:1;font-family:"Noto Serif TC",serif}
+h1{margin:0;font-size:28px;color:var(--blue);letter-spacing:.08em}h1 small{display:block;font-size:13px;color:var(--mute);letter-spacing:.2em;font-weight:400}
+h2{font-size:19px;margin:0 0 8px;color:var(--red)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px 6px 18px 6px;padding:18px;margin:16px 0;box-shadow:4px 4px 0 var(--line)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:2px solid var(--blue);background:none;color:var(--blue);border-radius:999px;padding:6px 16px;font:inherit;cursor:pointer}
+.tab.on{background:var(--blue);color:var(--card)}.tab.done::after{content:" ✓"}
+button.go{background:var(--red);color:#fff;border:0;border-radius:999px;padding:9px 22px;font:inherit;cursor:pointer}button.go:disabled{opacity:.4;cursor:not-allowed}
+button.alt{background:none;border:2px solid var(--ink);color:var(--ink);border-radius:999px;padding:6px 16px;font:inherit;cursor:pointer}
+input[type=text],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px}
+textarea{min-height:60px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}.opt.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 16%,var(--card))}
+.tag{display:inline-block;font-size:12px;border:1.5px solid var(--blue);color:var(--blue);border-radius:4px;padding:0 8px;margin-left:6px;transform:rotate(-2deg)}
+.fb{font-size:14px;margin:4px 0 10px}.mute{color:var(--mute);font-size:14px}
+.likert{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}.likert label{border:2px solid var(--line);border-radius:999px;padding:2px 14px;cursor:pointer}.likert input{display:none}.likert label:has(input:checked){background:var(--yel);color:#3a3330;border-color:var(--yel)}
+.chk label{display:inline-block;margin:2px 10px 2px 0;font-size:15px}
+table{border-collapse:collapse;font-size:14px;min-width:100%}th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:center;white-space:nowrap}.scroll{overflow-x:auto}
+.wf{display:block;font-size:13px;margin:2px 0 0;color:var(--mute)}.wf.bad{color:var(--red)}.wf.good{color:var(--ok)}
+.timer{font-size:30px;color:var(--blue);font-weight:700}
+.alist{display:flex;flex-direction:column;gap:8px}.art{text-align:left;border:2px solid var(--blue);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;cursor:pointer}.art.off{border-style:dashed;border-color:var(--line);color:var(--mute);cursor:default}
+#lb{position:fixed;inset:0;background:rgba(30,25,22,.94);z-index:50;display:none;flex-direction:column}#lb.on{display:flex}
+#lbbar{display:flex;gap:8px;align-items:center;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));color:#f1e8d8;flex-wrap:wrap}#lbbar b{flex:1;min-width:120px;font-size:15px}#lbbar button{background:none;border:2px solid #f1e8d8;color:#f1e8d8;border-radius:999px;padding:3px 14px;font:inherit;cursor:pointer}
+#lbbody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}#lbbody img{display:block;width:100%;margin:0 auto 10px;background:#fff}#lbbody.big img{width:220%;max-width:none}
+
+.tbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin:8px 0}
+.seat{border:2px dashed var(--line);border-radius:8px;text-align:center;font-size:14px;color:var(--mute);padding:2px 0}
+.seat.on{border:2px solid var(--ok);background:color-mix(in srgb,var(--ok) 22%,var(--card));color:var(--ink)}
+.bars{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+.bar{display:grid;grid-template-columns:minmax(5em,10em) 1fr 4.5em;gap:8px;align-items:center;font-size:14px}
+.bar i{display:block;height:16px;border-radius:4px;background:var(--blue)}
+.bar .tr{background:color-mix(in srgb,var(--line) 60%,transparent);border-radius:4px;overflow:hidden}
+.lv{display:inline-block;font-size:12px;border-radius:999px;padding:0 8px;border:1.5px solid currentColor;white-space:nowrap}
+.lv.A{color:var(--ok)}.lv.B{color:#b8860b}.lv.C{color:var(--red)}.lv.N{color:var(--mute)}
+.rtab td{white-space:normal;text-align:left;vertical-align:top}.rtab td.w{min-width:14em}
+.star{background:none;border:0;font-size:20px;cursor:pointer;color:var(--line);padding:0 4px}.star.on{color:var(--yel)}
+#bs{position:fixed;inset:0;z-index:60;background:var(--bg);color:var(--ink);display:none;flex-direction:column;padding:calc(16px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));overflow:auto}
+#bs.on{display:flex}
+#bs .bh{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#bs .bh h1{font-size:clamp(24px,3.2vw,48px);flex:1;min-width:8em}
+#bs .bh button{background:none;border:2px solid var(--ink);color:var(--ink);border-radius:999px;padding:4px 16px;font:inherit;font-size:clamp(14px,1.2vw,20px);cursor:pointer}
+#bs .bh button.on{background:var(--blue);border-color:var(--blue);color:var(--card)}
+#bs .bg{flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:clamp(12px,1.6vw,28px);margin-top:clamp(12px,1.6vw,24px)}
+#bs .bp{background:var(--card);border:3px solid var(--line);border-radius:22px 8px 22px 8px;padding:clamp(14px,1.8vw,32px);display:flex;flex-direction:column;gap:10px;min-width:0}
+#bs .bp h2{font-size:clamp(20px,2vw,34px);margin:0}
+#bs .huge{font-size:clamp(64px,9vw,160px);font-weight:900;color:var(--blue);line-height:1}
+#bs .huge small{font-size:.35em;color:var(--mute);font-weight:400}
+#bs .bt{font-size:clamp(16px,1.6vw,28px)}
+#bs .bar{grid-template-columns:minmax(6em,14em) 1fr 4.5em;font-size:clamp(16px,1.5vw,26px)}
+#bs .bar i{height:clamp(18px,2vw,34px)}
+#bs .quote{font-size:clamp(22px,2.4vw,42px);line-height:1.6;flex:1;display:flex;align-items:center}
+#bs .qa{font-size:clamp(14px,1.3vw,22px);color:var(--mute)}
+</style></head><body><main>
+<header><div class="big" id="bn">讀</div><h1>好讀・讀報日記<small>READING DIARY ／ 十分鐘讀報日記</small></h1></header>
+<div id="app"></div>
+<div id="lb"><div id="lbbar"><b id="lbt"></b><button id="lbz">放大</button><button id="lbx">關閉</button></div><div id="lbbody"></div></div>
+<div id="bs" role="dialog" aria-label="大屏幕"></div>
+</main>
+<script src="config.js?v=1"></script>
+<script>
+const AB=["擷取","推論","統整","評鑑"];
+const AD={擷取:"找到並取出文中明確的訊息",推論:"理解字面背後的原因與意圖",統整:"整合多段資訊、比較與排序",評鑑:"判斷說法是否合理並應用到情境"};
+const ISS=[
+{id:894,date:"10/12",arts:["破解大腦 獲諾獎","AI催生創業潮","南韓爆身高焦慮","測骨齡 政府補助"],qs:[
+["關於南韓家長為緩解孩子「身高焦慮」所採取的具體行動，下列敘述何者最符合報導內容？",["多數家長只依賴睡眠與運動，堅決拒絕讓學童接觸任何醫學檢測與介入","許多國小學童已被家長安排定期注射生長激素、性早熟抑制劑並追蹤骨齡","宣稱能助長高的「增高教室」每期收費約韓元八萬元，且僅限國高中生報名","增高營養劑在南韓市場反應冷淡，近六年銷售額呈現持續下滑趨勢"],1,"擷取"],
+["大田市議員推動《學生身高成長支援條例》，主張公費補助小學生檢測生長板，公民團體對此表達反對。下列何者最能反映公民團體反對的核心考量？",["質疑生長板檢測費用過於昂貴，將直接導致地方政府財政破產","主張南韓青少年平均身高已是亞洲最高，無須再進行任何健康的基礎追蹤","擔心公費檢測會降低家長自費購買增高營養劑與參加增高教室的意願","認為政府動用預算鼓勵「長高」等於變相暗示「矮是缺點」，恐助長外貌歧視"],3,"推論"],
+["小敏：「南韓人一定是因為普遍身材矮小，才會產生這麼嚴重的身高焦慮吧！」小傑：「其實客觀數據顯示南韓人在亞洲算很高，但社會卻將身高視為競爭力，甚至成為婚戀與職場的硬門檻。」下列兩人的對話分析，何者最符合文章的客觀數據與社會現狀？",["小敏完全正確，文章顯示南韓19歲男女平均身高均低於亞洲平均值","小傑完全正確，南韓19歲男性平均175.52公分且百年來身高增長顯著，但身高卻被視為「硬實力」","兩人都錯誤，南韓社會完全不在意身高，僅有婚介所單方面限制矮個子入會","兩人都部分正確，南韓人雖然矮，但約會平台顯示身高並非女性選擇對象的主因"],1,"評鑑"]]},
+{id:895,date:"10/19",arts:["閏秒走入歷史（含千禧蟲危機）","小熊維尼100歲"],qs:[
+["國際度量衡局（BIPM）決定自2027年5月20日起正式廢除「閏秒制」，改採「閏時制」，其主要目的為何？",["順應地球自轉速度加快，減少公曆與農曆的誤差","切斷不穩定的地球自轉對精密電子系統的干擾，降低時間校正風險","配合全球定位系統（GPS）的全面升級，提高導航精準度","解決因氣候變遷導致極地冰川融化所引發的千禧蟲危機"],1,"推論"],
+["文中提及美國時間專家謝爾曼形容地球是個「糟糕的時鐘」。下列何者不是導致地球自轉速率不恆定的原因？",["地核深處產生的物質與能量變動","月球對地球所產生的引力作用","全球氣候變遷引發極地冰川融化","人造原子鐘追蹤原子的自然振動滴答計時"],3,"統整"],
+["小華在製作「閏秒與閏時對比宣傳海報」時，打算列出新舊制度的差異。哪一組海報文案內容完全符合文章說明？",["舊制：每四年固定在2月增加一秒；新制：每數百年誤差達一小時才調整一次","舊制：當監測時差達0.9秒時進行微調；新制：誤差累積達3600秒時才啟動調整","舊制：每次調整均提前一年公告；新制：不再人為調整，完全由GPS自動校正","舊制：歷史上已進行27次扣減一秒的負閏秒；新制：改為每年固定增加一秒"],1,"統整"]]},
+{id:896,date:"10/26",arts:["陽剛男的手拿包","手拿包為何掀風潮","圖擊隊：誤食油桐果","別再花枝亂站（頭足類辨識）","青春領航員"],qs:[
+["手提包設計師泰勒．艾利斯認為，男性手提包近年越來越受歡迎的核心原因為何？",["為了在時尚圈掀起父權制度瓦解的革命","精品品牌大幅降低男性包款的販售價格","產品確實解決了男性攜帶隨身物品的實際需求","男星為了展現個人財力而進行的宣傳手段"],2,"擷取"],
+["根據文章對「服裝性別化符號演變」的說明，下列哪一個關係圖最符合「服裝性別化其實可以改變」的歷史與現況描述？",["高跟鞋：女性專屬➔男士必備單品；手拿包：男性專屬➔女性專屬","高跟鞋：曾為男士必備單品➔現今多為女性穿著；粉紅色：100年前男嬰使用➔現今常被視為女性化色彩","手拿包：過去為男性專屬➔今夏成為酷蓋時尚➔未來完全去除性別界線","藍色：100年前男嬰專屬➔現今女嬰專屬；手拿包：過去女性專屬➔現今男性禁忌"],1,"統整"],
+["國中生小華把耳機、行動電源、面紙、潤唇膏和水壺硬塞進褲袋，卻怕被嘲笑「像女生」而不敢用手拿包。若引用文章觀點勸導小華，哪一種說法最恰當？",["手拿包能解決實際攜帶需求，改善生活品質，且歷史上服裝性別化常有改變，不必懷有包袱","穿戴女性化配件是現代男性瓦解父權體制的最重要宣示，你應該挺身而出","運動明星拿手拿包只是為了接名牌代言賺錢，我們買便宜的後背包即可","100年前男嬰都穿藍色，所以男性拿手拿包早已是百年來的傳統習慣"],0,"評鑑"]]},
+{id:897,date:"11/02",arts:["高中職失學嚴重","如果人生重來（80億分之一）","永久夏令時間","高溫衝擊甲子園","身體極限被輕忽","找不到扣分點的高中生餐廳"],qs:[
+["小芸一家人到北海道旅行，特地前往「MIKASA COOKING ESSOR」。她想先吃一頓和食正餐，再買甜點，最後挑選三笠特產當伴手禮。根據文章，她應該依序前往哪些地方？",["まごころきっちん → Cherie → ESSOR STORE","Cherie → まごころきっちん → KITCHEN STADIUM","ESSOR STORE → Cherie → 交流大廳","まごころきっちん → KITCHEN STADIUM → ESSOR STORE"],0,"統整"],
+["阿凱：「三笠高中是專門培育廚師和糕點師的學校，國文、英文、數學都不重要。」小晴：「三笠高中的學生畢業後只能進入餐飲業工作，學校不會協助想繼續升學的人。」根據文章，下列判斷何者正確？",["阿凱正確，因為三笠高中是「食物調理科」單科學校","小晴正確，因為學校透過職場實習制度協助學生就業","兩人都錯，學校重視普通科目，也為想升學的學生提供個別化課程與升學輔導","兩人都對，學校課程只安排烹飪、製菓與店鋪經營"],2,"評鑑"],
+["小哲上網查詢「まごころきっちん」，看到「食べログ」評分是3.17分，他說：「才3分多，一定不好吃，不值得去。」根據文章，哪一個回應最合理？",["你說得沒錯，評分沒有超過4分的餐廳都不值得去","文章說這是「不錯的」評價，顧客也留言「找不到扣分點」、不預約就吃不到，應該同時看分數和評論內容再判斷","評分不重要，因為學生經營的餐廳，評審一定會特別給高分","分數低是因為學生不會待客，顧客都抱怨服務不好"],1,"推論"]]}];
+const PG={"破解大腦 獲諾獎":["894-nobel"],"AI催生創業潮":["894-ai"],"南韓爆身高焦慮":["894-height"],"測骨齡 政府補助":["894-bone"],
+"閏秒走入歷史（含千禧蟲危機）":["895-leap-1","895-leap-2"],"小熊維尼100歲":["895-pooh"],
+"陽剛男的手拿包":["896-clutch-1"],"手拿包為何掀風潮":["896-clutch-2"],"圖擊隊：誤食油桐果":["896-tung"],"別再花枝亂站（頭足類辨識）":["896-squid"],"青春領航員":["896-youth-1","896-youth-2"],
+"高中職失學嚴重":["897-dropout"],"如果人生重來（80億分之一）":["897-life"],"永久夏令時間":["897-dst"],"高溫衝擊甲子園":["897-heat"],"身體極限被輕忽":["897-body"],"找不到扣分點的高中生餐廳":["897-mikasa-1","897-mikasa-2"]};
+const GEN=/很好|很棒|好棒|好看|很讚|不錯|很有趣|有趣|有意思|很喜歡|喜歡|我覺得|覺得|因為|所以|這篇|這個|文章|報導|內容|非常|真的|超級|精彩|讚|很|好|棒|的|了|是|我|也|都|就/g;
+function whyErr(w,all){const t=(w||"").replace(/[\s，。,.！!？?、…～~：:；;「」『』（）()]/g,"");if(!t)return"請寫下原因";
+if(t.length<15)return`再多寫一點（${t.length}/15 字）。試著說：文中的哪個資訊、圖表或例子，讓你有什麼想法？`;
+if(new Set(t).size<8)return"內容太重複了，請用完整的句子說明。";
+if(t.replace(GEN,"").length<8)return"只寫「很好、很棒、很有趣」還不夠，請說出是哪一段、哪個資訊或圖表讓你有感覺。";
+if(all&&all.filter(v=>(v||"").trim()===w.trim()).length>1)return"三個原因不能一樣，每一篇請分別說明。";return""}
+const STRAT=["先看標題與圖表","畫重點","回頭重讀","查不懂的詞","和同學討論","沒有特別方法"];
+const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let S={code:"",ok:false,issues:{}},cur=894,db=null,uid=null,teacher=false,rows=[],tick=null,locked=false,sheetUrl="",ready=false;
+const CLASSES=["901","902"];
+const API=(window.HD_CONFIG&&window.HD_CONFIG.sheetApi)||"";
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+async function run(fn,...args){if(!API)return localRun(fn,args);
+const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn,args})});const j=await r.json();if(!j.ok)throw new Error(j.error||"連線錯誤");return j.data}
+/* 未設定 sheetApi 時：本機模式（資料只存在這台電腦） */
+function localRun(fn,a){const db=LS.get("hd_local",{});
+if(fn==="loadByCode")return db[a[0]]||{};if(fn==="saveIssue"){(db[a[0]]=db[a[0]]||{})[a[2]]=JSON.parse(a[3]);LS.set("hd_local",db);return{ok:true,code:a[0]}}
+if(fn==="getBadges")return[];if(fn==="getImage")return"";throw new Error("尚未設定 config.js 的 sheetApi（目前是本機模式）")}
+function encCode(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o))))}
+function decCode(t){return JSON.parse(decodeURIComponent(escape(atob(String(t).trim()))))}
+let LASTCODE="";
+const I=id=>S.issues[id]||(S.issues[id]={pre:0,ans:[null,null,null],rank:["","",""],why:["","",""],diff:0,int:0,conf:0,strat:[],ask:"",sec:0,done:false});
+const score=(is,x)=>x.ans.reduce((n,a,i)=>n+(a===is.qs[i][2]?1:0),0);
+function abil(list){const t={},c={};AB.forEach(a=>{t[a]=0;c[a]=0});list.forEach(([is,x])=>{if(!x||!x.done)return;is.qs.forEach((q,i)=>{t[q[3]]++;if(x.ans[i]===q[2])c[q[3]]++})});return AB.map(a=>t[a]?c[a]/t[a]:null)}
+function radar(v,col="var(--blue)"){const R=90,C=120,pts=v.map((p,i)=>{const a=-Math.PI/2+i*Math.PI/2,r=R*(p??0);return[C+r*Math.cos(a),C+r*Math.sin(a)]});
+let g=[.25,.5,.75,1].map(k=>`<polygon points="${AB.map((_,i)=>{const a=-Math.PI/2+i*Math.PI/2;return(C+R*k*Math.cos(a))+","+(C+R*k*Math.sin(a))}).join(" ")}" fill="none" stroke="var(--line)"/>`).join("");
+let lb=AB.map((n,i)=>{const a=-Math.PI/2+i*Math.PI/2;return`<text x="${C+(R+22)*Math.cos(a)}" y="${C+(R+22)*Math.sin(a)+5}" text-anchor="middle" font-size="14" fill="var(--ink)">${n}${v[i]==null?"":" "+Math.round(v[i]*100)+"%"}</text>`}).join("");
+return`<svg viewBox="0 0 240 240" width="100%" style="max-width:300px">${g}<polygon points="${pts.map(p=>p.join(",")).join(" ")}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="2"/>${lb}</svg>`}
+function lik(name,val,lo,hi){return`<div class="mute">${lo}　←　→　${hi}</div><div class="likert">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="${name}" value="${n}" ${val==n?"checked":""}>${n}</label>`).join("")}</div>`}
+
+/* 信箱讀報日記（11/3–4 收件）：原因品質 A=具體有依據 B=籠統感想 C=敷衍或無效，由 Claude 判讀，請老師複核 */
+let MAIL=[];
+const ROSTER={"902":["01","02","03","04","05","07","08","09","10","11","12","13","14","16","17","18","21","22","23","24","26","27","28","30","31","32","33","34","35","36","37"]};
+const LVN={A:"具體有依據",B:"籠統感想",C:"敷衍或無效",N:"未分類"};
+const nc=s=>{const m=String(s||"").match(/(\d{3})\s*[-－_ ]\s*(\d{1,2})/);return m?m[1]+"-"+m[2].padStart(2,"0"):String(s||"").trim()};
+let SHOW=null,showDoc=null,tIss=null;
+
+/* 學生類型：系統自動判斷，老師可修改 */
+const TYN=["認真型","快答型","敷衍型","待支援型"];
+const TYC={"認真型":"A","快答型":"N","敷衍型":"C","待支援型":"B"};
+const TYD={"認真型":"讀得夠久、原因具體","快答型":"答對多但讀很快","敷衍型":"原因亂打或重複","待支援型":"理解或表達需要協助"};
+let NAMES={},TYPES={};
+function bigr(s){const t=String(s||"").replace(/[\s，。,.！!？?、：:（）()「」]/g,"");const o=new Set();for(let i=0;i<t.length-1;i++)o.add(t.slice(i,i+2));return o}
+function autoLvl(w,all,title){if(whyErr(w,all))return"C";const t=String(w||"").replace(/[\s，。,.！!？?、]/g,"");
+const tb=bigr(title),wb=bigr(w);let hit=0;tb.forEach(b=>{if(wb.has(b))hit++});
+const core=t.replace(GEN,"").length;
+return(/\d/.test(t)||hit>=1&&core>=10||/我(身高|也|曾|家|自己|以前|原本|平常|會)/.test(t)&&core>=10||core>=18)?"A":"B"}
+function autoType(is,x){const l=x.lvl||[],a=l.filter(v=>v==="A").length,c=l.filter(v=>v==="C").length,sc=score(is,x),m=(x.sec||0)/60;
+if(c>=2)return"敷衍型";if(sc>=2&&m<2)return"快答型";if((a>=2&&m>=2)||(m>=4&&sc>=2&&c===0))return"認真型";return"待支援型"}
+function typeOf(code,is,x){const k=code+"|"+is.id;return TYPES[k]?{t:TYPES[k],man:true}:{t:autoType(is,x),man:false}}
+async function setType(k,v){if(v)TYPES[k]=v;else delete TYPES[k];try{await run("setType",tpin,k,v||"")}catch(e){alert("沒有存成功："+(e.message||e))}render();syncBadges()}
+
+/* 認真獎章：每期被評為認真型得一枚，累計 */
+let MYB=[],lastB="";
+const TITLE=n=>n>=8?"🥇 金牌讀者":n>=5?"🥈 銀牌讀者":n>=3?"🥉 銅牌讀者":n>=1?"🌱 認真讀者":"";
+function badgeMap(R){const m={};R.forEach(r=>ISS.forEach(is=>{const x=r.d[is.id];if(x&&x.done&&typeOf(r.code,is,x).t==="認真型")(m[r.code]=m[r.code]||[]).push(is.id)}));return m}
+async function syncBadges(){const j=JSON.stringify(badgeMap(merged()));if(j===lastB)return;try{await run("setBadges",tpin,j);lastB=j}catch(e){}}
+function loadMyBadges(){if(!S.code)return;run("getBadges",S.code).then(b=>{MYB=b||[];render()}).catch(()=>{})}
+let SUSTH=LS.get("hd_susth",30);
+function isSus(is,x){const a=x.ans||[];return(x.elapsed!=null&&x.elapsed<SUSTH)||(a.length&&a.every(v=>v===a[0])&&score(is,x)<3)}
+function loadMine(){if(!S.code)return;run("loadByCode",S.code).then(r=>{if(r&&Object.keys(r).length){S.issues=Object.assign(r,S.issues)}render()}).catch(()=>{});loadMyBadges()}
+function merged(){const by={};
+MAIL.forEach(m=>{const c=nc(m.code);(by[c]||(by[c]={code:c,d:{},src:{}}));by[c].d[m.is]={ans:m.ans,rank:m.rank,why:m.why,lvl:m.lvl,conf:m.conf,sec:m.sec,ask:m.ask,strat:[],pre:"",diff:"",int:"",done:true};by[c].src[m.is]="信箱"});
+rows.forEach(r=>{if(!r.code)return;let d={};try{d=JSON.parse(r.data)}catch(e){}const c=nc(r.code);(by[c]||(by[c]={code:c,d:{},src:{}}));Object.keys(d).forEach(k=>{if(d[k]&&d[k].done){const x=d[k];const is=ISS.find(i=>i.id==k);if(!x.lvl){x.lvl=x.why.map((w,j)=>autoLvl(w,x.why,x.rank[j]));x.autoLvl=true}by[c].d[k]=x;by[c].src[k]="網頁"}})});
+return Object.values(by).sort((a,b)=>a.code.localeCompare(b.code))}
+function issueStats(R,is){const sub=R.filter(r=>r.d[is.id]&&r.d[is.id].done);const xs=sub.map(r=>r.d[is.id]);
+const cls={};sub.forEach(r=>{const k=r.code.slice(0,3);cls[k]=cls[k]||new Set();cls[k].add(r.code.slice(4))});
+const qr=is.qs.map((q,i)=>xs.length?xs.filter(x=>x.ans[i]===q[2]).length/xs.length:0);
+const avg=xs.length?xs.reduce((n,x)=>n+score(is,x),0)/xs.length:0;
+const pop={};xs.forEach(x=>x.rank.forEach((a,k)=>{if(!a)return;const o=pop[a]||(pop[a]={a,f:0,t:0});o.t++;if(k===0)o.f++}));
+const lv={A:0,B:0,C:0,N:0};xs.forEach(x=>(x.lvl||["N","N","N"]).forEach(l=>lv[l]++));
+const ask=xs.filter(x=>(x.ask||"").replace(/[\s。．.無没沒有]/g,"").length>=3).length;
+return{sub,xs,cls,qr,avg,pop:Object.values(pop).sort((a,b)=>b.f-a.f||b.t-a.t),lv,ask}}
+const skey=(c,i,k)=>c+"|"+i+"|"+k;
+function showList(){if(SHOW)return SHOW;const s=[];MAIL.forEach(m=>m.lvl.forEach((l,k)=>{if(l==="A")s.push(skey(nc(m.code),m.is,k))}));return s}
+async function toggleStar(key){const s=new Set(showList());s.has(key)?s.delete(key):s.add(key);SHOW=[...s];
+try{await run("setShowcase",tpin,JSON.stringify(SHOW))}catch(e){}render()}
+function barRow(lab,v,txt){return`<div class="bar"><span>${esc(lab)}</span><span class="tr"><i style="width:${Math.round(Math.max(0,Math.min(1,v))*100)}%"></i></span><span>${esc(txt)}</span></div>`}
+let bsIss=null,bsQ=0;
+let bsTimer=null;
+function openBS(){if(!tauth)return;clearInterval(bsTimer);bsTimer=setInterval(()=>{if($("#bs").classList.contains("on"))loadAll();else clearInterval(bsTimer)},15000);const R=merged();const has=ISS.filter(i=>R.some(r=>r.d[i.id]));bsIss=bsIss||(has.length?has[has.length-1].id:ISS[0].id);bsQ=0;$("#bs").classList.add("on");drawBS()}
+function drawBS(){const R=merged(),is=ISS.find(i=>i.id===bsIss),st=issueStats(R,is),el=$("#bs");
+const n902=st.cls["902"]?st.cls["902"].size:0,tot=ROSTER["902"].length;
+const ex=[];const S2=new Set(showList());R.forEach(r=>{const x=r.d[is.id];if(!x)return;x.rank.forEach((a,k)=>{if(S2.has(skey(r.code,is.id,k))&&x.why[k])ex.push({a,w:x.why[k]})})});
+if(bsQ>=ex.length)bsQ=0;const e=ex[bsQ];
+el.innerHTML=`<div class="bh"><h1>好讀・讀報日記｜第${is.id}期 ${is.date}</h1>${ISS.map(i=>`<button data-bi="${i.id}" class="${i.id===is.id?"on":""}">${i.id}期</button>`).join("")}<button id="bsf">全螢幕</button><button id="bsx">關閉</button></div>
+<div class="bg">
+<div class="bp"><h2>本期繳交（902）</h2><div class="huge">${n902}<small> / ${tot} 人</small></div><div class="bt">繳交率 ${Math.round(n902/tot*100)}%　・　平均答對 ${st.avg.toFixed(1)} / 3 題</div><div class="bt">🏅 本期認真獎章：${R.filter(r=>r.d[is.id]&&r.d[is.id].done&&typeOf(r.code,is,r.d[is.id]).t==="認真型").length} 人</div><div class="bt mute">還沒交的同學，記得完成本期讀報日記！</div></div>
+<div class="bp"><h2>每一題的答對率</h2><div class="bars">${is.qs.map((q,i)=>barRow("第"+(i+1)+"題・"+q[3],st.qr[i],Math.round(st.qr[i]*100)+"%")).join("")}</div><div class="bt mute">${(()=>{const m=st.qr.map((v,i)=>[v,i]).sort((a,b)=>a[0]-b[0])[0];return st.xs.length?"最需要加強："+is.qs[m[1]][3]+"（第"+(m[1]+1)+"題）":""})()}</div></div>
+<div class="bp"><h2>最受歡迎的報導</h2><div class="bars">${st.pop.slice(0,5).map(p=>barRow(p.a,st.pop[0]?p.f/Math.max(1,st.pop[0].f):0,p.f+" 票")).join("")||'<div class="bt mute">尚無資料</div>'}</div><div class="bt mute">票數＝被選為第 1 名的次數</div></div>
+<div class="bp"><h2>原因寫得好的示範 ${ex.length?`<span class="qa">${bsQ+1} / ${ex.length}</span>`:""}</h2>${e?`<div class="quote">「${esc(e.w)}」</div><div class="qa">推薦《${esc(e.a)}》・不具名分享</div><div><button class="alt" id="bsp">上一則</button> <button class="alt" id="bsn">下一則</button></div>`:'<div class="bt mute">老師可在老師端用 ⭐ 挑選要展示的原因</div>'}<div class="bt mute">好原因＝說出文章裡的哪個資訊，讓你想到什麼。</div></div>
+</div>`;
+el.querySelectorAll("[data-bi]").forEach(b=>b.onclick=()=>{bsIss=+b.dataset.bi;bsQ=0;drawBS()});
+$("#bsx").onclick=()=>{el.classList.remove("on");if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})};
+$("#bsf").onclick=()=>{try{const p=document.fullscreenElement?document.exitFullscreen():el.requestFullscreen();p&&p.catch&&p.catch(()=>{})}catch(err){}};
+if($("#bsp")){$("#bsp").onclick=()=>{bsQ=(bsQ-1+ex.length)%ex.length;drawBS()};$("#bsn").onclick=()=>{bsQ=(bsQ+1)%ex.length;drawBS()}}}
+document.addEventListener("keydown",e=>{if(!$("#bs").classList.contains("on"))return;if(e.key==="Escape")$("#bsx").click();if(e.key==="ArrowRight"&&$("#bsn"))$("#bsn").click();if(e.key==="ArrowLeft"&&$("#bsp"))$("#bsp").click()});
+
+let tmode=false,tauth=false,tpin="",pinH=null,pinMsg="";
+async function loadAll(){setTimeout(syncBadges,500);try{const r=await run("getAll",tpin);rows=r.rows||[];MAIL=r.mail||[];NAMES=r.names||{};TYPES=r.types?JSON.parse(r.types):{};SHOW=r.showcase?JSON.parse(r.showcase):null;sheetUrl=r.sheetUrl||"";lastB=r.badges||""}catch(e){alert("讀取資料失敗："+(e.message||e))}render();if($("#bs").classList.contains("on"))drawBS()}
+function renderT(){const app=$("#app");$("#bn").textContent="師";
+const top=`<div class="tbtns"><button class="alt" id="tback">← 回學生端</button>${tauth?`<button class="alt" id="tout">登出教師端</button>`:""}</div>`;
+if(!tauth){app.innerHTML=top+`<div class="card"><h2>👩‍🏫 教師端登入</h2><input type="password" inputmode="numeric" id="p1" placeholder="教師密碼" autocomplete="current-password"><p><button class="go" id="plog">登入</button> <span class="mute" id="pmsg">${esc(pinMsg)}</span></p><p class="mute">教師密碼設定在 Apps Script 的 Code.gs 最上方（TEACHER_PIN）。</p></div>`;
+wireTop();const go=async()=>{const a=$("#p1").value.trim();if(!a){$("#pmsg").textContent="請輸入密碼";return}$("#pmsg").textContent="確認中…";
+try{const ok=await run("teacherLogin",a);if(ok===true){tpin=a;tauth=true;pinMsg="";if(location.hash==="#screen")setTimeout(openBS,800);app.innerHTML=top+`<div class="card"><p class="mute">讀取資料中…</p></div>`;loadAll()}else{$("#pmsg").textContent=ok||"密碼錯誤";$("#p1").value=""}}catch(e){$("#pmsg").textContent="錯誤："+(e.message||e)}};
+$("#plog").onclick=go;$("#p1").onkeydown=e=>{if(e.key==="Enter")go()};$("#p1").focus();return}
+app.innerHTML=top+tpanel();wireTop();wireT()}
+function wireTop(){$("#tback").onclick=()=>{tmode=false;render()};if($("#tout"))$("#tout").onclick=()=>{tauth=false;tpin="";tmode=false;$("#bs").classList.remove("on");render()}}
+
+/* 教師試作與題目檢查：試作不送出、不寄信、不留資料 */
+let TEST=false,SB=null,QV=false;
+function startTest(){SB={S,cur,MYB};S={code:"教師試作",ok:true,issues:{}};MYB=[];TEST=true;tmode=false;QV=false;window.scrollTo(0,0);render()}
+function endTest(){stopT();if(SB){S=SB.S;cur=SB.cur;MYB=SB.MYB}SB=null;TEST=false;tmode=true;window.scrollTo(0,0);render()}
+function renderQ(){const app=$("#app");$("#bn").textContent="題";
+app.innerHTML=`<div class="tbtns"><button class="alt" id="qback">← 回教師端</button></div>`+ISS.map(is=>`<div class="card"><h2>第${is.id}期 ${is.date}</h2>
+<p><b>報導</b>（點開檢查版面）</p><div class="alist">${is.arts.map(a=>PG[a]?`<button class="art" data-a="${esc(a)}">📰 ${esc(a)}${PG[a].length>1?`<span class="tag">${PG[a].length}頁</span>`:""}<span class="mute" style="font-size:12px">　${PG[a].join("、")}.jpg</span></button>`:`<span class="art off">${esc(a)}<span class="tag">沒有版面圖</span></span>`).join("")}</div>
+${is.qs.map((q,i)=>`<div style="margin-top:12px"><b>${i+1}.</b> ${esc(q[0])}<span class="tag">${q[3]}</span>${q[1].map((o,k)=>`<div class="opt ${k===q[2]?"right":""}" style="cursor:default">${"ＡＢＣＤ"[k]}　${esc(o)}${k===q[2]?"　✅ 正確答案":""}</div>`).join("")}</div>`).join("")}</div>`).join("");
+$("#qback").onclick=()=>{QV=false;render()};document.querySelectorAll(".art[data-a]").forEach(b=>b.onclick=()=>openLb(b.dataset.a))}
+function render(){const app=$("#app");
+if(QV){renderQ();return}
+if(tmode){renderT();return}
+if(!ready){app.innerHTML=`<div class="card"><p class="mute">連線中，請稍候…</p></div>`;return}
+if(!S.ok){const reg=LS.get("hd_reg",{});
+app.innerHTML=`<div class="card"><h2>歡迎來到讀報日記</h2><p>每週花 10–15 分鐘讀好讀周報，回答幾題、選出你最愛的報導，最後會畫出屬於你的閱讀能力圖。</p><p class="mute">資料只給老師了解大家的閱讀情形，不會公開。</p>
+<p>請填寫你的班級、座號和姓名</p><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="cls" style="flex:1;min-width:110px"><option value="">班級</option>${CLASSES.map(c=>`<option ${c===reg.cls?"selected":""}>${c}</option>`).join("")}</select><select id="seat" style="flex:1;min-width:110px"><option value="">座號</option>${Array.from({length:40},(_,i)=>String(i+1).padStart(2,"0")).map(n=>`<option ${n===reg.seat?"selected":""}>${n}</option>`).join("")}</select><input type="text" id="nm" placeholder="姓名" value="${esc(reg.name||"")}" style="flex:2;min-width:140px"></div>
+<p><label><input type="checkbox" id="cons"> 我了解並同意將作答資料提供給老師參考</label></p><button class="go" id="start">開始</button>
+<p style="margin-top:22px"><a href="#teacher" id="tgo" style="color:var(--mute);font-size:14px">我是老師，先略過，直接進教師端 →</a></p></div>
+${API?"":`<p class="mute">⚠️ 尚未連接試算表（本機模式），作答只會存在這台電腦。</p>`}`;
+$("#tgo").onclick=e=>{e.preventDefault();tmode=true;render()};
+$("#start").onclick=()=>{const a=$("#cls").value,b=$("#seat").value,n=$("#nm").value.trim();if(!a||!b||!n)return alert("請選擇班級、座號，並填寫姓名");if(!$("#cons").checked)return alert("請勾選同意");
+const c=a+"-"+b;if(c!==S.code&&!confirm("你是 "+c+" "+n+" 嗎？"))return;LS.set("hd_reg",{cls:a,seat:b,name:n});S.code=c;S.name=n;S.ok=true;loadMine();render()};return}
+const x=I(cur),is=ISS.find(i=>i.id===cur);$("#bn").textContent=String(ISS.indexOf(is)+1);
+if(!x.t0)x.t0=Date.now();
+const codeCard=LASTCODE?`<div class="card" style="border-color:var(--red)"><h2>⚠️ 沒有送到老師端</h2><p>請按「複製」，把這段成績碼貼給老師（Classroom 私人留言），老師可以幫你匯入。</p><textarea id="lcode" readonly style="min-height:80px;font-size:12px">${LASTCODE}</textarea><p><button class="alt" id="lcopy">複製成績碼</button></p></div>`:"";
+let h=codeCard+(!TEST?`<p class="mute" style="margin:0 0 8px">👤 ${esc(S.code)} ${esc(S.name||"")}　<a href="#" id="rereg" style="color:var(--mute)">不是我？重新登記</a></p>`:"")+(TEST?`<div class="card" style="border-color:var(--yel);background:color-mix(in srgb,var(--yel) 18%,var(--card))"><b>🧪 教師試作模式</b>：可以完整作答、看回饋與能力圖，但<b>不會送出、不會寄信、不會留下資料</b>。 <button class="alt" id="tend">結束試作，回教師端</button></div>`:"")+`<div class="tabs">${ISS.map(i=>`<button class="tab ${i.id===cur?"on":""} ${S.issues[i.id]?.done?"done":""}" data-i="${i.id}">第${i.id}期 ${i.date}</button>`).join("")}</div>`;
+h+=`<div class="card"><h2>① 讀報計時</h2><div class="timer" id="tm">${fmt(x.sec)}</div><p class="mute">開始讀報時按「開始」，讀完按「停止」。目標 10–15 分鐘。</p><button class="alt" id="tbtn">${tick?"停止":"開始"}</button></div>`;
+h+=`<div class="card"><h2>② 先來讀報</h2><p class="mute">點一篇報導打開版面，按「放大」可以看清楚小字。</p><div class="alist">${is.arts.map(a=>PG[a]?`<button class="art" data-a="${esc(a)}">📰 ${esc(a)}${PG[a].length>1?`<span class="tag">${PG[a].length}頁</span>`:""}</button>`:`<span class="art off">${esc(a)}<span class="tag">版面尚未放入</span></span>`).join("")}</div></div>`;
+h+=`<div class="card"><h2>③ 讀前小問</h2><p>這一期的主題，我原本就很熟悉。</p>${lik("pre",x.pre,"完全不熟","非常熟")}</div>`;
+h+=`<div class="card"><h2>④ 閱讀理解題<span class="tag">出版社題庫</span></h2>`+is.qs.map((q,i)=>`<div><b>${i+1}.</b> ${esc(q[0])}<span class="tag">${q[3]}</span>${q[1].map((o,k)=>{const a=x.ans[i];let c="";if(a!=null){if(k===q[2])c="right";else if(k===a)c="wrong"}return`<button class="opt ${c}" data-q="${i}" data-k="${k}">${"ＡＢＣＤ"[k]}　${esc(o)}</button>`}).join("")}${x.ans[i]!=null?`<div class="fb">${x.ans[i]===q[2]?"✅ 答對了！":"❌ 這題答錯了，正確答案是 "+"ＡＢＣＤ"[q[2]]+"。回文章找找線索吧。"}</div>`:""}</div>`).join("<hr style='border:0;border-top:1px dashed var(--line)'>")+`</div>`;
+h+=`<div class="card"><h2>⑤ 我的本期前三名</h2><p class="mute">選出最喜歡的三篇報導，並說說原因。${is.arts.length<3?`這一期只有 ${is.arts.length} 篇，第 ${is.arts.length+1} 名請自選一篇（可以是其他期的），寫上題目和原因。`:""}</p>${[0,1,2].map(r=>`<p><b>第 ${r+1} 名</b>${r>=is.arts.length?`<span class="tag">自選</span><input type="text" data-rt="${r}" placeholder="請寫上你自選的那一篇報導題目（可以是其他期的）" value="${esc(x.rank[r])}">`:`<select data-r="${r}"><option value="">請選擇</option>${is.arts.map(a=>`<option ${x.rank[r]===a?"selected":""}>${esc(a)}</option>`).join("")}</select>`}<textarea data-w="${r}" placeholder="為什麼喜歡？請具體說明：哪一段、哪個資訊或圖表，讓你想到什麼？（至少 15 字，只寫「很好、很棒」不能送出）">${esc(x.why[r])}</textarea><span class="wf" data-f="${r}">${wfTxt(x.why[r],x.why)}</span></p>`).join("")}</div>`;
+h+=`<div class="card"><h2>⑥ 讀後想一想</h2><p>這期讀起來的難度</p>${lik("diff",x.diff,"很容易","很困難")}<p>這期報導有趣的程度</p>${lik("int",x.int,"無聊","超有趣")}<p>我覺得自己讀懂了</p>${lik("conf",x.conf,"沒讀懂","完全讀懂")}<p>我用了哪些讀報方法？</p><div class="chk">${STRAT.map(s=>`<label><input type="checkbox" data-s="${s}" ${x.strat.includes(s)?"checked":""}> ${s}</label>`).join("")}</div><p>讀完後，我最想追問的一個問題是…</p><textarea id="ask">${esc(x.ask)}</textarea></div>`;
+const okAll=x.ans.every(a=>a!=null)&&x.rank.every(Boolean)&&new Set(x.rank).size===3&&x.why.every(w=>!whyErr(w,x.why))&&x.pre&&x.diff&&x.int&&x.conf;
+h+=`<p><button class="go" id="sub" ${okAll?"":"disabled"}>${x.done?"更新送出":"送出本期紀錄"}</button> <span class="mute" id="msg">${okAll?"":"請完成所有題目、三個名次（不可重複）、具體的原因與五分量表"}</span></p>`;
+if(!TEST)h+=`<div class="card"><h2>🏅 我的認真獎章</h2>${MYB.length?`<p style="font-size:22px;margin:4px 0"><b>${MYB.length}</b> 枚　<span style="color:var(--red)">${TITLE(MYB.length)}</span></p><p style="font-size:28px;letter-spacing:4px;margin:0">${"🏅".repeat(MYB.length)}</p><p class="mute">得到獎章的期別：${MYB.map(i=>"第"+i+"期").join("、")}</p>`:`<p class="mute">還沒有獎章。原因寫得具體（說出文章的哪個資訊讓你想到什麼）、認真讀完再作答，老師檢閱後就會發給你 🏅</p>`}<p class="mute">累積 3 枚：🥉 銅牌讀者　5 枚：🥈 銀牌讀者　8 枚：🥇 金牌讀者</p></div>`;
+const done=ISS.filter(i=>S.issues[i.id]?.done);
+if(done.length){const v=abil(done.map(i=>[i,S.issues[i.id]])),tot=done.reduce((n,i)=>n+score(i,S.issues[i.id]),0);
+h+=`<div class="card"><h2>⑦ 我的閱讀能力圖</h2><div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center"><div style="flex:1;min-width:230px">${radar(v)}</div><div style="flex:1;min-width:200px"><p>已完成 ${done.length} 期，共答對 <b>${tot}</b> / ${done.length*3} 題</p>${AB.map((a,i)=>`<div class="mute"><b>${a}</b>：${AD[a]}${v[i]==null?"":"（"+Math.round(v[i]*100)+"%）"}</div>`).join("")}${(()=>{const m=v.map((p,i)=>[p,i]).filter(p=>p[0]!=null).sort((a,b)=>a[0]-b[0])[0];return m&&m[0]<1?`<p>下一步可以多練習：<b>${AB[m[1]]}</b></p>`:""})()}</div></div><p class="mute">題數有限，圖形只是參考，不是正式的能力判定。</p></div>`}
+if(teacher)h+=`<p><button class="alt" id="tgo2">👩‍🏫 切換到教師端</button></p>`;
+app.innerHTML=h;wire()}
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function wire(){const x=I(cur);
+document.querySelectorAll(".art[data-a]").forEach(b=>b.onclick=()=>openLb(b.dataset.a));
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{stopT();cur=+b.dataset.i;render()});
+$("#tbtn").onclick=()=>{if(tick)stopT();else{tick=setInterval(()=>{x.sec++;$("#tm").textContent=fmt(x.sec)},1000)}$("#tbtn").textContent=tick?"停止":"開始"};
+document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const i=+b.dataset.q;if(x.ans[i]!=null)return;x.ans[i]=+b.dataset.k;render()});
+document.querySelectorAll("input[data-rt]").forEach(i=>i.oninput=()=>{x.rank[+i.dataset.rt]=i.value.trim();chk()});
+document.querySelectorAll("select[data-r]").forEach(s=>s.onchange=()=>{x.rank[+s.dataset.r]=s.value;chk()});
+document.querySelectorAll("textarea[data-w]").forEach(t=>t.oninput=()=>{x.why[+t.dataset.w]=t.value;chk()});
+["pre","diff","int","conf"].forEach(n=>document.querySelectorAll(`input[name=${n}]`).forEach(r=>r.onchange=()=>{x[n]=+r.value;chk()}));
+document.querySelectorAll("input[data-s]").forEach(c=>c.onchange=()=>{x.strat=[...document.querySelectorAll("input[data-s]:checked")].map(e=>e.dataset.s)});
+$("#ask").oninput=e=>x.ask=e.target.value;$("#sub").onclick=submit;
+if($("#lcopy"))$("#lcopy").onclick=()=>{const t=$("#lcode");t.select();try{navigator.clipboard.writeText(t.value).then(()=>$("#lcopy").textContent="已複製",()=>document.execCommand("copy"))}catch(e){document.execCommand("copy")}};if($("#rereg"))$("#rereg").onclick=e=>{e.preventDefault();stopT();S={code:"",ok:false,issues:{}};MYB=[];render()};if($("#tgo2"))$("#tgo2").onclick=()=>{stopT();tmode=true;render()};if($("#tend"))$("#tend").onclick=endTest}
+function wireT(){if(!$("#csv"))return;
+$("#susth").onchange=e=>{SUSTH=Math.max(0,+e.target.value||0);LS.set("hd_susth",SUSTH);render()};
+$("#impb").onclick=async()=>{try{const o=decCode($("#impc").value);await run("saveIssue",o.code,o.name,o.issue,JSON.stringify(o.x),o.sum);await loadAll();alert("已匯入 "+o.code+" 第"+o.issue+"期")}catch(e){$("#impm").textContent="匯入失敗："+(e.message||"成績碼格式不對")}};
+$("#clrb").onclick=async()=>{if($("#clrt").value.trim()!=="清除"){$("#clrm").textContent="請先輸入「清除」兩個字";return}try{const n=await run("clearClass",tpin,$("#clrc").value);$("#clrm").textContent="已清除 "+n+" 筆";loadAll()}catch(e){$("#clrm").textContent="失敗："+(e.message||e)}};$("#ttest").onclick=startTest;$("#tqv").onclick=()=>{QV=true;window.scrollTo(0,0);render()};$("#trf").onclick=()=>loadAll();$("#csv").onclick=csv;$("#bsopen").onclick=openBS;document.querySelectorAll("[data-ti]").forEach(b=>b.onclick=()=>{tIss=+b.dataset.ti;render()});document.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>toggleStar(b.dataset.st));document.querySelectorAll("[data-ty]").forEach(e=>e.onchange=()=>setType(e.dataset.ty,e.value));document.querySelectorAll("[data-tyr]").forEach(b=>b.onclick=()=>setType(b.dataset.tyr,""))}
+const IMGC={};
+function openLb(a){const L=$("#lb"),B=$("#lbbody");$("#lbt").textContent=a;B.className="";$("#lbz").textContent="放大";B.innerHTML=PG[a].map(p=>`<img data-p="${p}" alt="${esc(a)}" style="min-height:200px">`).join("");B.querySelectorAll("img[data-p]").forEach(im=>{const p=im.dataset.p;if(IMGC[p]){im.src=IMGC[p];return}run("getImage",p).then(u=>{if(u){IMGC[p]=u;im.src=u}else im.alt="找不到版面圖："+p}).catch(()=>{im.alt="版面圖載入失敗"})});L.classList.add("on");B.scrollTop=0}
+$("#lbx").onclick=()=>$("#lb").classList.remove("on");$("#lbz").onclick=()=>{const B=$("#lbbody"),b=B.classList.toggle("big");$("#lbz").textContent=b?"縮小":"放大"};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#lb").classList.remove("on")});
+function wfTxt(w,all){if(!(w||"").trim())return"";const e=whyErr(w,all);return e?"✏️ "+e:"✅ 這個原因很具體"}
+function chk(){document.querySelectorAll(".wf").forEach(el=>{const x=I(cur),i=+el.dataset.f,e=whyErr(x.why[i],x.why);el.textContent=wfTxt(x.why[i],x.why);el.className="wf"+(x.why[i].trim()?(e?" bad":" good"):"")});const x=I(cur),ok=x.ans.every(a=>a!=null)&&x.rank.every(Boolean)&&new Set(x.rank).size===3&&x.why.every(w=>!whyErr(w,x.why))&&x.pre&&x.diff&&x.int&&x.conf;$("#sub").disabled=!ok;$("#msg").textContent=ok?"":"請完成所有題目、三個名次（不可重複）、具體的原因與五分量表"}
+function stopT(){clearInterval(tick);tick=null}
+async function submit(){stopT();const x=I(cur);if(TEST){x.done=true;render();alert("🧪 試作完成：這次作答沒有送出，也沒有寄信。");return}x.done=true;let note="已送出！";
+const is=ISS.find(i=>i.id===cur),ab=abil([[is,x]]);$("#sub").disabled=true;$("#msg").textContent="送出中…";
+x.elapsed=Math.round((Date.now()-(x.t0||Date.now()))/1000);const sum={score:score(is,x),letters:x.ans.map(a=>"ABCD"[a]).join(""),abil:ab,sus:isSus(is,x)};LASTCODE="";
+try{await run("saveIssue",S.code,S.name||"",cur,JSON.stringify(x),sum)}catch(e){LASTCODE=encCode({code:S.code,name:S.name||"",issue:cur,x,sum});note="送出失敗："+(e.message||e)+"。\n請把畫面上的「成績碼」複製給老師，或稍後再按一次送出。"}
+render();alert(note)}
+function tpanel(){const R=merged();tIss=tIss||cur;const is=ISS.find(i=>i.id===tIss),st=issueStats(R,is);
+const head=ISS.map(i=>`<th>${i.id}分</th>`).join("");
+const BM=badgeMap(R);const body=R.map(r=>`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td>${(BM[r.code]||[]).length?"🏅×"+(BM[r.code]||[]).length:"–"}</td>${ISS.map(i=>{const x=r.d[i.id];return`<td>${x&&x.done?score(i,x)+"/3":"–"}</td>`}).join("")}<td>${Math.round(ISS.reduce((n,i)=>n+(r.d[i.id]?.done?(r.d[i.id].sec||0):0),0)/60)}分</td><td>${esc([...new Set(Object.values(r.src))].join("、"))}</td></tr>`).join("");
+const all=[];R.forEach(r=>ISS.forEach(i=>{if(r.d[i.id]?.done)all.push([i,r.d[i.id]])}));
+const mean=ISS.map(i=>{const a=all.filter(p=>p[0]===i);return a.length?(a.reduce((n,p)=>n+score(i,p[1]),0)/a.length).toFixed(2):"–"});
+const got=st.cls["902"]||new Set();const miss=ROSTER["902"].filter(x=>!got.has(x));
+const lvT=st.lv.A+st.lv.B+st.lv.C+st.lv.N||1;const S2=new Set(showList());
+const rr=[];st.sub.forEach(r=>{const x=r.d[is.id];x.rank.forEach((a,k)=>rr.push({c:r.code,k,a,w:x.why[k],l:(x.lvl||[])[k]||"N"}))});
+return`<div class="card"><h2>👩‍🏫 老師端（只有你看得到）</h2><div class="tbtns"><button class="alt" id="ttest">🧪 教師試作（不記錄）</button><button class="alt" id="tqv">📋 題目檢查</button><button class="go" id="bsopen">📺 大屏幕（全班看）</button><button class="alt" id="csv">打開資料試算表</button><button class="alt" id="trf">重新整理資料</button></div>
+<p class="mute">資料合併：網頁送出的作答＋信箱的讀報日記（同一位同學同一期以網頁為準）。共 ${R.length} 位。各期平均答對：${ISS.map((i,k)=>i.id+"期 "+mean[k]).join("；")}</p>
+<div class="tabs">${ISS.map(i=>`<button class="tab ${i.id===is.id?"on":""}" data-ti="${i.id}">第${i.id}期</button>`).join("")}</div>
+<h2 style="margin-top:14px">902 繳交：${got.size} / ${ROSTER["902"].length} 人（${Math.round(got.size/ROSTER["902"].length*100)}%）</h2>
+<div class="seats">${ROSTER["902"].map(x=>`<span class="seat ${got.has(x)?"on":""}">${x}</span>`).join("")}</div>
+<p class="mute">${miss.length?"未交座號："+miss.join("、"):"全班都交了！"}${Object.keys(st.cls).filter(k=>k!=="902").map(k=>`　另有 ${k} 班 ${st.cls[k].size} 人`).join("")}</p>
+<h2>學生類型（第${is.id}期）</h2>
+<div class="tbtns">${TYN.map(t=>`<span class="lv ${TYC[t]}" style="font-size:14px;padding:2px 10px">${t} ${st.sub.filter(r=>typeOf(r.code,is,r.d[is.id]).t===t).length} 人</span>`).join("")}</div>
+<p class="mute">${TYN.map(t=>t+"："+TYD[t]).join("；")}。系統依原因品質、讀報時間、答對題數自動判斷，可直接用下拉選單修改。</p>
+<div class="scroll"><table class="rtab"><tr><th>座號</th><th>姓名</th><th>類型</th><th>答對</th><th>讀報</th><th>用時</th><th>提醒</th><th>原因品質</th></tr>${st.sub.slice().sort((a,b)=>a.code.localeCompare(b.code)).map(r=>{const x=r.d[is.id],ty=typeOf(r.code,is,x),k=r.code+"|"+is.id;
+return`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td><select data-ty="${esc(k)}" style="width:auto;padding:2px 6px">${TYN.map(t=>`<option ${t===ty.t?"selected":""}>${t}</option>`).join("")}</select> ${ty.t==="認真型"?"🏅 ":""}<span class="mute" style="font-size:12px">${ty.man?"老師修改":"自動"}</span>${ty.man?` <button class="star" data-tyr="${esc(k)}" title="改回自動判斷" style="font-size:13px;color:var(--mute)">↺</button>`:""}</td><td>${score(is,x)}/3</td><td>${Math.round((x.sec||0)/60)} 分</td><td>${x.elapsed!=null?x.elapsed+" 秒":"–"}</td><td>${isSus(is,x)?'<span class="lv C">疑似亂答</span>':""}</td><td>${(x.lvl||[]).map(l=>`<span class="lv ${l}">${LVN[l].slice(0,2)}</span>`).join(" ")}${x.autoLvl?' <span class="mute" style="font-size:12px">（自動）</span>':""}</td></tr>`}).join("")}</table></div>
+<h2>答題</h2><div class="bars">${is.qs.map((q,i)=>barRow("第"+(i+1)+"題・"+q[3],st.qr[i],Math.round(st.qr[i]*100)+"%")).join("")}</div>
+<h2>原因品質</h2><div class="bars">${["A","B","C","N"].filter(l=>st.lv[l]).map(l=>barRow(LVN[l],st.lv[l]/lvT,st.lv[l]+" 則")).join("")||'<p class="mute">尚無資料</p>'}</div>
+<p class="mute">信箱資料由 Claude 依「具體有依據／籠統感想／敷衍或無效」判讀；網頁送出的原因由系統自動判斷（標「自動」），僅供參考。有提出追問：${st.ask} / ${st.xs.length} 人。</p>
+<h2>每則原因 <span class="mute">按 ⭐ 選為大屏幕示範（不顯示代號）</span></h2>
+<div class="scroll"><table class="rtab"><tr><th>⭐</th><th>代號</th><th>文章</th><th>原因</th><th>分類</th></tr>${rr.map(o=>{const key=skey(o.c,is.id,o.k);return`<tr><td><button class="star ${S2.has(key)?"on":""}" data-st="${esc(key)}" aria-label="選為示範">★</button></td><td>${esc(o.c)}</td><td>${esc(o.a)}</td><td class="w">${esc(o.w)}</td><td><span class="lv ${o.l}">${LVN[o.l]}</span></td></tr>`}).join("")}</table></div>
+<h2>教師工具</h2>
+<p>疑似亂答門檻：用時少於 <input type="number" id="susth" value="${SUSTH}" min="0" style="width:5em"> 秒，或每題都選同一個選項且沒有全對。<span class="mute">只是提醒，請老師確認。</span></p>
+<p><b>匯入成績碼</b>（學生送出失敗時畫面上的代碼）</p><textarea id="impc" placeholder="貼上成績碼" style="min-height:60px"></textarea><p><button class="alt" id="impb">匯入</button> <span class="mute" id="impm"></span></p>
+<p><b>清除某班的讀報資料</b> <span class="mute">（作答紀錄工作表會保留）</span></p><p><select id="clrc" style="width:auto">${CLASSES.map(c=>`<option>${c}</option>`).join("")}</select> <input type="text" id="clrt" placeholder="輸入「清除」確認" style="width:10em"> <button class="alt" id="clrb">清除</button> <span class="mute" id="clrm"></span></p>
+<h2>全部學生</h2><div style="max-width:300px">${radar(abil(all),"var(--red)")}</div><div class="scroll"><table><tr><th>代號</th><th>姓名</th><th>🏅 獎章</th>${head}<th>讀報總分鐘</th><th>來源</th></tr>${body}</table></div></div>`}
+function csv(){if(sheetUrl)window.open(sheetUrl,"_blank");else alert("找不到試算表網址")}
+render();
+ready=true;{const reg=LS.get("hd_reg",null);if(reg&&reg.cls&&reg.seat&&reg.name){S.code=reg.cls+"-"+reg.seat;S.name=reg.name;S.ok=true;loadMine()}}
+if(location.hash==="#teacher"||location.hash==="#scores"||location.hash==="#screen")tmode=true;
+render();setInterval(()=>{if(tmode&&tauth&&!$("#bs").classList.contains("on"))loadAll()},60000);
+</script></body></html>

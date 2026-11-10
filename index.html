@@ -135,6 +135,19 @@ function okIssue(is,x){return reflOk(x)&&x.ans.every(a=>a!=null)&&(!is.fill||x.f
 function fillHTML(is,x,teacher){const parts=is.fill.text.split("【】"),g=x.fillChk?fillGrade(is,x):null;let h="";
 parts.forEach((t,i)=>{h+=esc(t);if(i<parts.length-1){if(teacher)h+=`<b style="color:var(--ok);border-bottom:2px solid var(--ok);padding:0 4px">${esc(is.fill.ans[i].join("／"))}</b>`;
 else h+=`<input type="text" class="fb" data-fb="${i}" value="${esc((x.fillAns||[])[i]||"")}" ${x.fillChk?"disabled":""} style="display:inline-block;width:${Math.max(4,is.fill.ans[i][0].length+2)}em;padding:2px 6px;margin:2px;${g?(g[i]?"border-color:var(--ok)":"border-color:var(--red)"):""}">${g?(g[i]?"✅":`❌<span style="color:var(--ok);font-size:14px">（${esc(is.fill.ans[i][0])}）</span>`):""}`}});return h}
+
+/* 專注報告：記錄作答期間離開頁面、發呆、貼上次數（不記錄學生在其他網頁做什麼） */
+let lastAct=Date.now(),blurAt=0;
+function fx(){if(tmode||TEST||!S.ok)return null;const x=S.issues[cur];if(!x||x.done)return null;return x.focus||(x.focus={away:0,awaySec:0,idleSec:0,paste:0,keys:0})}
+["keydown","input","click","scroll","mousemove","touchstart","wheel"].forEach(ev=>document.addEventListener(ev,e=>{lastAct=Date.now();if(ev==="keydown"&&/INPUT|TEXTAREA/.test((e.target||{}).tagName||"")){const f=fx();if(f)f.keys++}},{passive:true,capture:true}));
+document.addEventListener("paste",e=>{if(/INPUT|TEXTAREA/.test((e.target||{}).tagName||"")){const f=fx();if(f)f.paste++}},true);
+window.addEventListener("blur",()=>{const f=fx();if(f){f.away++;blurAt=Date.now()}});
+window.addEventListener("focus",()=>{const f=fx();if(f&&blurAt){f.awaySec+=Math.round((Date.now()-blurAt)/1000)}blurAt=0;lastAct=Date.now()});
+setInterval(()=>{const f=fx();if(f&&!blurAt&&document.hasFocus()&&Date.now()-lastAct>90000)f.idleSec+=5},5000);
+function focusScore(is,x){const f=x&&x.focus;if(!f)return null;let s=100;s-=Math.min(40,f.away*6);s-=Math.min(20,Math.floor(f.awaySec/15));s-=Math.min(20,Math.floor(f.idleSec/30)*3);s-=Math.min(30,f.paste*15);
+if(isSus(is,x))s-=15;s-=5*((x.lvl||x.why.map((w,j)=>autoLvl(w,x.why,x.rank[j]))).filter(l=>l==="C").length);return Math.max(0,Math.round(s))}
+const focusLv=n=>n==null?"":n>=85?"🔥 超專注":n>=70?"👍 專注":n>=55?"🙂 還不錯":"😵 容易分心";
+function focusTips(is,x){const f=x.focus||{},t=[];if(f.away>=3)t.push("作答時離開網頁 "+f.away+" 次，下次先把其他分頁關掉，一口氣讀完。");if(f.idleSec>=60)t.push("有一段時間沒有動作，讀不下去時可以回頭重讀標題或圖說。");if(f.paste>0)t.push("有貼上文字的紀錄，原因請用自己的話寫。");if(isSus(is,x))t.push("作答速度很快，選擇題前先回文章找證據。");if(!t.length)t.push("很專心！繼續保持這樣的讀報節奏。");return t}
 function abil(list){const t={},c={};AB.forEach(a=>{t[a]=0;c[a]=0});list.forEach(([is,x])=>{if(!x||!x.done)return;is.qs.forEach((q,i)=>{t[q[3]]++;if(x.ans[i]===q[2])c[q[3]]++});if(is.fill&&x.fillChk){t[is.fill.ab]+=is.fill.ans.length;c[is.fill.ab]+=fillOk(is,x)}});return AB.map(a=>t[a]?c[a]/t[a]:null)}
 function radar(v,col="var(--blue)"){const R=90,C=120,pts=v.map((p,i)=>{const a=-Math.PI/2+i*Math.PI/2,r=R*(p??0);return[C+r*Math.cos(a),C+r*Math.sin(a)]});
 let g=[.25,.5,.75,1].map(k=>`<polygon points="${AB.map((_,i)=>{const a=-Math.PI/2+i*Math.PI/2;return(C+R*k*Math.cos(a))+","+(C+R*k*Math.sin(a))}).join(" ")}" fill="none" stroke="var(--line)"/>`).join("");
@@ -235,7 +248,7 @@ if(QV){renderQ();return}
 if(tmode){renderT();return}
 if(!ready){app.innerHTML=`<div class="card"><p class="mute">連線中，請稍候…</p></div>`;return}
 if(!S.ok){const reg=LS.get("hd_reg",{});
-app.innerHTML=`<div class="card"><h2>歡迎來到讀報日記</h2><p>每週花 10–15 分鐘讀好讀周報，回答幾題、選出你最愛的報導，最後會畫出屬於你的閱讀能力圖。</p><p class="mute">資料只給老師了解大家的閱讀情形，不會公開。</p>
+app.innerHTML=`<div class="card"><h2>歡迎來到讀報日記</h2><p>每週花 10–15 分鐘讀好讀周報，回答幾題、選出你最愛的報導，最後會畫出屬於你的閱讀能力圖。</p><p class="mute">資料只給老師了解大家的閱讀情形，不會公開。</p><p class="mute">🎯 送出後會有你的「專注報告」：網頁會記錄作答時離開頁面、停頓和貼上的次數（不會知道你在其他網頁做什麼）。</p>
 <p>請填寫你的班級、座號和姓名</p><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="cls" style="flex:1;min-width:110px"><option value="">班級</option>${CLASSES.map(c=>`<option ${c===reg.cls?"selected":""}>${c}</option>`).join("")}</select><select id="seat" style="flex:1;min-width:110px"><option value="">座號</option>${Array.from({length:40},(_,i)=>String(i+1).padStart(2,"0")).map(n=>`<option ${n===reg.seat?"selected":""}>${n}</option>`).join("")}</select><input type="text" id="nm" placeholder="姓名" value="${esc(reg.name||"")}" style="flex:2;min-width:140px"></div>
 <p><label><input type="checkbox" id="cons"> 我了解並同意將作答資料提供給老師參考</label></p><button class="go" id="start">開始</button>
 <p style="margin-top:22px"><a href="#teacher" id="tgo" style="color:var(--mute);font-size:14px">我是老師，先略過，直接進教師端 →</a></p></div>
@@ -259,6 +272,11 @@ ${x.strat1?`<p class="mute" style="margin:6px 0 2px">✍️ ${STRAT_EV[x.strat1]
 <p><b>用一句話說出〈${esc(mainArt(is))}〉在講什麼：</b></p><textarea id="gist" placeholder="誰／什麼事＋結果或作者想說的重點（至少 10 字）">${esc(x.gist||"")}</textarea><span class="wf" id="gistf"></span><p>讀完後，我最想追問的一個問題是…</p><textarea id="ask">${esc(x.ask)}</textarea></div>`;
 const okAll=okIssue(is,x);
 h+=`<p><button class="go" id="sub" ${okAll?"":"disabled"}>${x.done?"更新送出":"送出本期紀錄"}</button> <span class="mute" id="msg">${okAll?"":"請完成所有題目（含填空題）、三個名次、具體的原因、量表，以及讀報方法、卡住的地方和一句話摘要"}</span></p>`;
+if(x.done&&x.focus){const fs=focusScore(is,x),f=x.focus,hist=ISS.filter(i=>S.issues[i.id]&&S.issues[i.id].done&&S.issues[i.id].focus);
+h+=`<div class="card"><h2>🎯 我的專注報告（第${is.id}期）</h2><p style="margin:4px 0"><span style="font-size:44px;font-weight:900;color:var(--blue)">${fs}</span> 分　<span style="font-size:20px">${focusLv(fs)}</span></p>
+<div class="bars">${barRow("讀報計時",Math.min(1,(x.sec||0)/600),Math.round((x.sec||0)/60)+" 分")}${barRow("作答總時間",Math.min(1,(x.elapsed||0)/900),Math.round((x.elapsed||0)/60)+" 分")}${barRow("離開網頁",Math.min(1,f.away/5),f.away+" 次")}${barRow("發呆時間",Math.min(1,f.idleSec/180),f.idleSec+" 秒")}${barRow("貼上文字",Math.min(1,f.paste/3),f.paste+" 次")}</div>
+<p><b>給你的建議</b></p><ul style="margin:0;padding-left:20px">${focusTips(is,x).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+${hist.length>1?`<p class="mute" style="margin-top:8px">每期專注指數：${hist.map(i=>`第${i.id}期 <b>${focusScore(i,S.issues[i.id])}</b>`).join("　→　")}</p>`:""}</div>`}
 if(!TEST)h+=`<div class="card"><h2>🏅 我的認真獎章</h2>${MYB.length?`<p style="font-size:22px;margin:4px 0"><b>${MYB.length}</b> 枚　<span style="color:var(--red)">${TITLE(MYB.length)}</span></p><p style="font-size:28px;letter-spacing:4px;margin:0">${"🏅".repeat(MYB.length)}</p><p class="mute">得到獎章的期別：${MYB.map(i=>"第"+i+"期").join("、")}</p>`:`<p class="mute">還沒有獎章。原因寫得具體（說出文章的哪個資訊讓你想到什麼）、認真讀完再作答，老師檢閱後就會發給你 🏅</p>`}<p class="mute">累積 3 枚：🥉 銅牌讀者　5 枚：🥈 銀牌讀者　8 枚：🥇 金牌讀者</p></div>`;
 const done=ISS.filter(i=>S.issues[i.id]?.done);
 if(done.length){const v=abil(done.map(i=>[i,S.issues[i.id]])),tot=done.reduce((n,i)=>n+score(i,S.issues[i.id]),0);
@@ -298,7 +316,7 @@ function chk(){document.querySelectorAll(".wf[data-f]").forEach(el=>{const x=I(c
 function stopT(){clearInterval(tick);tick=null}
 async function submit(){stopT();const x=I(cur);if(TEST){x.done=true;render();alert("🧪 試作完成：這次作答沒有送出，也沒有寄信。");return}x.done=true;let note="已送出！";
 const is=ISS.find(i=>i.id===cur),ab=abil([[is,x]]);$("#sub").disabled=true;$("#msg").textContent="送出中…";
-x.elapsed=Math.round((Date.now()-(x.t0||Date.now()))/1000);const sum={score:score(is,x),letters:x.ans.map(a=>"ABCD"[a]).join("")+(is.fill?"｜填空"+fillOk(is,x)+"/"+is.fill.ans.length:""),abil:ab,sus:isSus(is,x)};LASTCODE="";
+x.elapsed=Math.round((Date.now()-(x.t0||Date.now()))/1000);if(x.focus){const fs0=focusScore(is,x);x.strat=(x.strat||[]).filter(v=>!/^專注：/.test(v)).concat(["專注："+fs0+"（離開"+x.focus.away+"次"+x.focus.awaySec+"秒、發呆"+x.focus.idleSec+"秒、貼上"+x.focus.paste+"次）"])}const sum={score:score(is,x),letters:x.ans.map(a=>"ABCD"[a]).join("")+(is.fill?"｜填空"+fillOk(is,x)+"/"+is.fill.ans.length:""),abil:ab,sus:isSus(is,x)};LASTCODE="";
 try{await run("saveIssue",S.code,S.name||"",cur,JSON.stringify(x),sum)}catch(e){LASTCODE=encCode({code:S.code,name:S.name||"",issue:cur,x,sum});note="送出失敗："+(e.message||e)+"。\n請把畫面上的「成績碼」複製給老師，或稍後再按一次送出。"}
 render();alert(note)}
 function tpanel(){const R=merged();tIss=tIss||cur;const is=ISS.find(i=>i.id===tIss),st=issueStats(R,is);
@@ -318,8 +336,8 @@ return`<div class="card"><h2>👩‍🏫 老師端（只有你看得到）</h2><
 <h2>學生類型（第${is.id}期）</h2>
 <div class="tbtns">${TYN.map(t=>`<span class="lv ${TYC[t]}" style="font-size:14px;padding:2px 10px">${t} ${st.sub.filter(r=>typeOf(r.code,is,r.d[is.id]).t===t).length} 人</span>`).join("")}</div>
 <p class="mute">${TYN.map(t=>t+"："+TYD[t]).join("；")}。系統依原因品質、讀報時間、答對題數自動判斷，可直接用下拉選單修改。</p>
-<div class="scroll"><table class="rtab"><tr><th>座號</th><th>姓名</th><th>類型</th><th>答對</th><th>填空</th><th>讀報</th><th>用時</th><th>提醒</th><th>原因品質</th></tr>${st.sub.slice().sort((a,b)=>a.code.localeCompare(b.code)).map(r=>{const x=r.d[is.id],ty=typeOf(r.code,is,x),k=r.code+"|"+is.id;
-return`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td><select data-ty="${esc(k)}" style="width:auto;padding:2px 6px">${TYN.map(t=>`<option ${t===ty.t?"selected":""}>${t}</option>`).join("")}</select> ${ty.t==="認真型"?"🏅 ":""}<span class="mute" style="font-size:12px">${ty.man?"老師修改":"自動"}</span>${ty.man?` <button class="star" data-tyr="${esc(k)}" title="改回自動判斷" style="font-size:13px;color:var(--mute)">↺</button>`:""}</td><td>${score(is,x)}/3</td><td>${is.fill?(x.fillChk?fillOk(is,x)+"/"+is.fill.ans.length:"–"):""}</td><td>${Math.round((x.sec||0)/60)} 分</td><td>${x.elapsed!=null?x.elapsed+" 秒":"–"}</td><td>${isSus(is,x)?'<span class="lv C">疑似亂答</span>':""}</td><td>${(x.lvl||[]).map(l=>`<span class="lv ${l}">${LVN[l].slice(0,2)}</span>`).join(" ")}${x.autoLvl?' <span class="mute" style="font-size:12px">（自動）</span>':""}</td></tr>`}).join("")}</table></div>
+<div class="scroll"><table class="rtab"><tr><th>座號</th><th>姓名</th><th>類型</th><th>答對</th><th>填空</th><th>讀報</th><th>用時</th><th>專注</th><th>提醒</th><th>原因品質</th></tr>${st.sub.slice().sort((a,b)=>a.code.localeCompare(b.code)).map(r=>{const x=r.d[is.id],ty=typeOf(r.code,is,x),k=r.code+"|"+is.id;
+return`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td><select data-ty="${esc(k)}" style="width:auto;padding:2px 6px">${TYN.map(t=>`<option ${t===ty.t?"selected":""}>${t}</option>`).join("")}</select> ${ty.t==="認真型"?"🏅 ":""}<span class="mute" style="font-size:12px">${ty.man?"老師修改":"自動"}</span>${ty.man?` <button class="star" data-tyr="${esc(k)}" title="改回自動判斷" style="font-size:13px;color:var(--mute)">↺</button>`:""}</td><td>${score(is,x)}/3</td><td>${is.fill?(x.fillChk?fillOk(is,x)+"/"+is.fill.ans.length:"–"):""}</td><td>${Math.round((x.sec||0)/60)} 分</td><td>${x.elapsed!=null?x.elapsed+" 秒":"–"}</td><td>${(()=>{const fs=focusScore(is,x);return fs==null?"–":`<b>${fs}</b><br><span class="mute" style="font-size:12px">離${x.focus.away}次·呆${x.focus.idleSec}秒·貼${x.focus.paste}</span>`})()}</td><td>${isSus(is,x)?'<span class="lv C">疑似亂答</span>':""}${(focusScore(is,x)??100)<55?' <span class="lv B">疑似分心</span>':""}</td><td>${(x.lvl||[]).map(l=>`<span class="lv ${l}">${LVN[l].slice(0,2)}</span>`).join(" ")}${x.autoLvl?' <span class="mute" style="font-size:12px">（自動）</span>':""}</td></tr>`}).join("")}</table></div>
 <h2>答題</h2><div class="bars">${is.qs.map((q,i)=>barRow("第"+(i+1)+"題・"+q[3],st.qr[i],Math.round(st.qr[i]*100)+"%")).join("")}</div>
 <h2>原因品質</h2><div class="bars">${["A","B","C","N"].filter(l=>st.lv[l]).map(l=>barRow(LVN[l],st.lv[l]/lvT,st.lv[l]+" 則")).join("")||'<p class="mute">尚無資料</p>'}</div>
 <p class="mute">信箱資料由 Claude 依「具體有依據／籠統感想／敷衍或無效」判讀；網頁送出的原因由系統自動判斷（標「自動」），僅供參考。有提出追問：${st.ask} / ${st.xs.length} 人。</p>

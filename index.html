@@ -102,7 +102,14 @@ if(t.length<15)return`再多寫一點（${t.length}/15 字）。試著說：文�
 if(new Set(t).size<8)return"內容太重複了，請用完整的句子說明。";
 if(t.replace(GEN,"").length<8)return"只寫「很好、很棒、很有趣」還不夠，請說出是哪一段、哪個資訊或圖表讓你有感覺。";
 if(all&&all.filter(v=>(v||"").trim()===w.trim()).length>1)return"三個原因不能一樣，每一篇請分別說明。";return""}
-const STRAT=["先看標題與圖表","畫重點","回頭重讀","查不懂的詞","和同學討論","沒有特別方法"];
+const STRAT=["先看標題與圖表","畫重點","回頭重讀","查不懂的詞","和同學討論","先看題目再回文章找"];
+/* 讀報方法：單選主要方法＋寫出證據（研究用：確認真的有用、不是亂勾） */
+const STRAT_EV={"先看標題與圖表":"標題或圖表讓我先知道了什麼？","畫重點":"寫下你畫的一句重點","回頭重讀":"你重讀了哪一段？為什麼要重讀？","查不懂的詞":"你查了哪個詞？意思是什麼？","和同學討論":"你們討論了什麼問題？結論是什麼？","先看題目再回文章找":"哪一題讓你回到文章找？在哪一段找到答案？"};
+const STUCK=["生詞太多","句子太長、看不懂","缺少背景知識","圖表看不懂","文章太長、沒耐心","沒有卡住"];
+const MAINART={894:"南韓爆身高焦慮",895:"閏秒走入歷史（含千禧蟲危機）",896:"陽剛男的手拿包",897:"找不到扣分點的高中生餐廳"};
+const mainArt=is=>is.main||MAINART[is.id]||is.arts[0];
+function evErr(t,min){const v=String(t||"").replace(/[\s，。,.！!？?、]/g,"");if(v.length<min)return`至少寫 ${min} 個字（${v.length}/${min}）`;if(new Set(v).size<Math.min(5,min))return"請寫完整的句子";return""}
+function reflOk(x){return x.strat1&&!evErr(x.stratEv,6)&&x.stuck&&!evErr(x.gist,10)}
 const $=s=>document.querySelector(s);const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let S={code:"",ok:false,issues:{}},cur=898,db=null,uid=null,teacher=false,rows=[],tick=null,locked=false,sheetUrl="",ready=false;
 const CLASSES=["901","902"];
@@ -124,7 +131,7 @@ const score=(is,x)=>x.ans.reduce((n,a,i)=>n+(a===is.qs[i][2]?1:0),0);
 const normF=v=>String(v||"").replace(/[\s《》〈〉「」『』、，。]/g,"").replace(/[０-９]/g,d=>String.fromCharCode(d.charCodeAt(0)-65248));
 function fillGrade(is,x){if(!is.fill)return null;const a=x.fillAns||[];return is.fill.ans.map((alts,i)=>alts.some(v=>normF(v)===normF(a[i])))}
 function fillOk(is,x){const g=x.fillChk?fillGrade(is,x):null;return g?g.filter(Boolean).length:0}
-function okIssue(is,x){return x.ans.every(a=>a!=null)&&(!is.fill||x.fillChk)&&x.rank.every(Boolean)&&new Set(x.rank).size===3&&x.why.every(w=>!whyErr(w,x.why))&&x.pre&&x.diff&&x.int&&x.conf}
+function okIssue(is,x){return reflOk(x)&&x.ans.every(a=>a!=null)&&(!is.fill||x.fillChk)&&x.rank.every(Boolean)&&new Set(x.rank).size===3&&x.why.every(w=>!whyErr(w,x.why))&&x.pre&&x.diff&&x.int&&x.conf}
 function fillHTML(is,x,teacher){const parts=is.fill.text.split("【】"),g=x.fillChk?fillGrade(is,x):null;let h="";
 parts.forEach((t,i)=>{h+=esc(t);if(i<parts.length-1){if(teacher)h+=`<b style="color:var(--ok);border-bottom:2px solid var(--ok);padding:0 4px">${esc(is.fill.ans[i].join("／"))}</b>`;
 else h+=`<input type="text" class="fb" data-fb="${i}" value="${esc((x.fillAns||[])[i]||"")}" ${x.fillChk?"disabled":""} style="display:inline-block;width:${Math.max(4,is.fill.ans[i][0].length+2)}em;padding:2px 6px;margin:2px;${g?(g[i]?"border-color:var(--ok)":"border-color:var(--red)"):""}">${g?(g[i]?"✅":`❌<span style="color:var(--ok);font-size:14px">（${esc(is.fill.ans[i][0])}）</span>`):""}`}});return h}
@@ -246,9 +253,12 @@ h+=`<div class="card"><h2>③ 讀前小問</h2><p>這一期的主題，我原本
 h+=`<div class="card"><h2>④ 閱讀理解題<span class="tag">出版社題庫</span></h2>`+is.qs.map((q,i)=>`<div><b>${i+1}.</b> ${esc(q[0]).replace(/\n/g,"<br>")}<span class="tag">${q[3]}</span>${q[1].map((o,k)=>{const a=x.ans[i];let c="";if(a!=null){if(k===q[2])c="right";else if(k===a)c="wrong"}return`<button class="opt ${c}" data-q="${i}" data-k="${k}">${"ＡＢＣＤ"[k]}　${esc(o)}</button>`}).join("")}${x.ans[i]!=null?`<div class="fb">${x.ans[i]===q[2]?"✅ 答對了！":"❌ 這題答錯了，正確答案是 "+"ＡＢＣＤ"[q[2]]+"。回文章找找線索吧。"}${q[4]?`<div class="mute" style="margin-top:4px">💡 ${esc(q[4])}</div>`:""}</div>`:""}</div>`).join("<hr style='border:0;border-top:1px dashed var(--line)'>")+`</div>`;
 if(is.fill)h+=`<div class="card"><h2>④-2 填空題<span class="tag">${is.fill.ab}</span></h2><p class="mute">根據文章內容，填入適當的詞語。全部填好再按「對答案」，對完就不能修改。</p><p style="line-height:2.4">${fillHTML(is,x)}</p>${x.fillChk?`<p><b>答對 ${fillOk(is,x)} / ${is.fill.ans.length} 格</b></p>`:`<p><button class="alt" id="fchk">對答案</button> <span class="mute" id="fmsg"></span></p>`}</div>`;
 h+=`<div class="card"><h2>⑤ 我的本期前三名</h2><p class="mute">選出最喜歡的三篇報導，並說說原因。${is.arts.length<3?`這一期只有 ${is.arts.length} 篇，第 ${is.arts.length+1} 名請自選一篇（可以是其他期的），寫上題目和原因。`:""}</p>${[0,1,2].map(r=>`<p><b>第 ${r+1} 名</b>${r>=is.arts.length?`<span class="tag">自選</span><input type="text" data-rt="${r}" placeholder="請寫上你自選的那一篇報導題目（可以是其他期的）" value="${esc(x.rank[r])}">`:`<select data-r="${r}"><option value="">請選擇</option>${is.arts.map(a=>`<option ${x.rank[r]===a?"selected":""}>${esc(a)}</option>`).join("")}</select>`}<textarea data-w="${r}" placeholder="為什麼喜歡？請具體說明：哪一段、哪個資訊或圖表，讓你想到什麼？（至少 15 字，只寫「很好、很棒」不能送出）">${esc(x.why[r])}</textarea><span class="wf" data-f="${r}">${wfTxt(x.why[r],x.why)}</span></p>`).join("")}</div>`;
-h+=`<div class="card"><h2>⑥ 讀後想一想</h2><p>這期讀起來的難度</p>${lik("diff",x.diff,"很容易","很困難")}<p>這期報導有趣的程度</p>${lik("int",x.int,"無聊","超有趣")}<p>我覺得自己讀懂了</p>${lik("conf",x.conf,"沒讀懂","完全讀懂")}<p>我用了哪些讀報方法？</p><div class="chk">${STRAT.map(s=>`<label><input type="checkbox" data-s="${s}" ${x.strat.includes(s)?"checked":""}> ${s}</label>`).join("")}</div><p>讀完後，我最想追問的一個問題是…</p><textarea id="ask">${esc(x.ask)}</textarea></div>`;
+h+=`<div class="card"><h2>⑥ 讀後想一想</h2><p>這期讀起來的難度</p>${lik("diff",x.diff,"很容易","很困難")}<p>這期報導有趣的程度</p>${lik("int",x.int,"無聊","超有趣")}<p>我覺得自己讀懂了</p>${lik("conf",x.conf,"沒讀懂","完全讀懂")}<p><b>這次我「最主要」用的讀報方法是：</b>（選一個）</p><div class="chk">${STRAT.map(s=>`<label><input type="radio" name="strat1" data-s1="${s}" ${x.strat1===s?"checked":""}> ${s}</label>`).join("")}</div>
+${x.strat1?`<p class="mute" style="margin:6px 0 2px">✍️ ${STRAT_EV[x.strat1]}</p><input type="text" id="sev" value="${esc(x.stratEv||"")}" placeholder="寫出具體內容，證明你真的用了這個方法"><span class="wf" id="sevf"></span>`:""}
+<p><b>讀這期時，我最卡住的地方是：</b></p><div class="chk">${STUCK.map(s=>`<label><input type="radio" name="stuck" data-sk="${s}" ${x.stuck===s?"checked":""}> ${s}</label>`).join("")}</div>
+<p><b>用一句話說出〈${esc(mainArt(is))}〉在講什麼：</b></p><textarea id="gist" placeholder="誰／什麼事＋結果或作者想說的重點（至少 10 字）">${esc(x.gist||"")}</textarea><span class="wf" id="gistf"></span><p>讀完後，我最想追問的一個問題是…</p><textarea id="ask">${esc(x.ask)}</textarea></div>`;
 const okAll=okIssue(is,x);
-h+=`<p><button class="go" id="sub" ${okAll?"":"disabled"}>${x.done?"更新送出":"送出本期紀錄"}</button> <span class="mute" id="msg">${okAll?"":"請完成所有題目（含填空題對答案）、三個名次（不可重複）、具體的原因與五分量表"}</span></p>`;
+h+=`<p><button class="go" id="sub" ${okAll?"":"disabled"}>${x.done?"更新送出":"送出本期紀錄"}</button> <span class="mute" id="msg">${okAll?"":"請完成所有題目（含填空題）、三個名次、具體的原因、量表，以及讀報方法、卡住的地方和一句話摘要"}</span></p>`;
 if(!TEST)h+=`<div class="card"><h2>🏅 我的認真獎章</h2>${MYB.length?`<p style="font-size:22px;margin:4px 0"><b>${MYB.length}</b> 枚　<span style="color:var(--red)">${TITLE(MYB.length)}</span></p><p style="font-size:28px;letter-spacing:4px;margin:0">${"🏅".repeat(MYB.length)}</p><p class="mute">得到獎章的期別：${MYB.map(i=>"第"+i+"期").join("、")}</p>`:`<p class="mute">還沒有獎章。原因寫得具體（說出文章的哪個資訊讓你想到什麼）、認真讀完再作答，老師檢閱後就會發給你 🏅</p>`}<p class="mute">累積 3 枚：🥉 銅牌讀者　5 枚：🥈 銀牌讀者　8 枚：🥇 金牌讀者</p></div>`;
 const done=ISS.filter(i=>S.issues[i.id]?.done);
 if(done.length){const v=abil(done.map(i=>[i,S.issues[i.id]])),tot=done.reduce((n,i)=>n+score(i,S.issues[i.id]),0);
@@ -267,7 +277,12 @@ document.querySelectorAll("input[data-rt]").forEach(i=>i.oninput=()=>{x.rank[+i.
 document.querySelectorAll("select[data-r]").forEach(s=>s.onchange=()=>{x.rank[+s.dataset.r]=s.value;chk()});
 document.querySelectorAll("textarea[data-w]").forEach(t=>t.oninput=()=>{x.why[+t.dataset.w]=t.value;chk()});
 ["pre","diff","int","conf"].forEach(n=>document.querySelectorAll(`input[name=${n}]`).forEach(r=>r.onchange=()=>{x[n]=+r.value;chk()}));
-document.querySelectorAll("input[data-s]").forEach(c=>c.onchange=()=>{x.strat=[...document.querySelectorAll("input[data-s]:checked")].map(e=>e.dataset.s)});
+const syncStrat=()=>{x.strat=x.strat1?[x.strat1+(x.stratEv?"："+x.stratEv.trim():""),"卡住："+(x.stuck||""),"摘要："+(x.gist||"").trim()]:[]};
+document.querySelectorAll("input[data-s1]").forEach(c=>c.onchange=()=>{x.strat1=c.dataset.s1;syncStrat();render()});
+document.querySelectorAll("input[data-sk]").forEach(c=>c.onchange=()=>{x.stuck=c.dataset.sk;syncStrat();chk()});
+const evf=()=>{const e1=$("#sev")?evErr(x.stratEv,6):"",e2=evErr(x.gist,10);if($("#sevf")){$("#sevf").textContent=x.stratEv?(e1?"✏️ "+e1:"✅"):"";$("#sevf").className="wf"+(x.stratEv?(e1?" bad":" good"):"")}$("#gistf").textContent=x.gist?(e2?"✏️ "+e2:"✅"):"";$("#gistf").className="wf"+(x.gist?(e2?" bad":" good"):"")};
+if($("#sev"))$("#sev").oninput=e=>{x.stratEv=e.target.value;syncStrat();evf();chk()};
+$("#gist").oninput=e=>{x.gist=e.target.value;syncStrat();evf();chk()};evf();
 $("#ask").oninput=e=>x.ask=e.target.value;$("#sub").onclick=submit;
 if($("#lcopy"))$("#lcopy").onclick=()=>{const t=$("#lcode");t.select();try{navigator.clipboard.writeText(t.value).then(()=>$("#lcopy").textContent="已複製",()=>document.execCommand("copy"))}catch(e){document.execCommand("copy")}};if($("#rereg"))$("#rereg").onclick=e=>{e.preventDefault();stopT();S={code:"",ok:false,issues:{}};MYB=[];render()};if($("#tgo2"))$("#tgo2").onclick=()=>{stopT();tmode=true;render()};if($("#tend"))$("#tend").onclick=endTest}
 function wireT(){if(!$("#csv"))return;
@@ -279,7 +294,7 @@ function openLb(a){const L=$("#lb"),B=$("#lbbody");$("#lbt").textContent=a;B.cla
 $("#lbx").onclick=()=>$("#lb").classList.remove("on");$("#lbz").onclick=()=>{const B=$("#lbbody"),b=B.classList.toggle("big");$("#lbz").textContent=b?"縮小":"放大"};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#lb").classList.remove("on")});
 function wfTxt(w,all){if(!(w||"").trim())return"";const e=whyErr(w,all);return e?"✏️ "+e:"✅ 這個原因很具體"}
-function chk(){document.querySelectorAll(".wf").forEach(el=>{const x=I(cur),i=+el.dataset.f,e=whyErr(x.why[i],x.why);el.textContent=wfTxt(x.why[i],x.why);el.className="wf"+(x.why[i].trim()?(e?" bad":" good"):"")});const x=I(cur),ok=okIssue(ISS.find(i=>i.id===cur),x);$("#sub").disabled=!ok;$("#msg").textContent=ok?"":"請完成所有題目（含填空題對答案）、三個名次（不可重複）、具體的原因與五分量表"}
+function chk(){document.querySelectorAll(".wf[data-f]").forEach(el=>{const x=I(cur),i=+el.dataset.f,e=whyErr(x.why[i],x.why);el.textContent=wfTxt(x.why[i],x.why);el.className="wf"+(x.why[i].trim()?(e?" bad":" good"):"")});const x=I(cur),ok=okIssue(ISS.find(i=>i.id===cur),x);$("#sub").disabled=!ok;$("#msg").textContent=ok?"":"請完成所有題目（含填空題）、三個名次、具體的原因、量表，以及讀報方法、卡住的地方和一句話摘要"}
 function stopT(){clearInterval(tick);tick=null}
 async function submit(){stopT();const x=I(cur);if(TEST){x.done=true;render();alert("🧪 試作完成：這次作答沒有送出，也沒有寄信。");return}x.done=true;let note="已送出！";
 const is=ISS.find(i=>i.id===cur),ab=abil([[is,x]]);$("#sub").disabled=true;$("#msg").textContent="送出中…";
@@ -308,6 +323,9 @@ return`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td><select 
 <h2>答題</h2><div class="bars">${is.qs.map((q,i)=>barRow("第"+(i+1)+"題・"+q[3],st.qr[i],Math.round(st.qr[i]*100)+"%")).join("")}</div>
 <h2>原因品質</h2><div class="bars">${["A","B","C","N"].filter(l=>st.lv[l]).map(l=>barRow(LVN[l],st.lv[l]/lvT,st.lv[l]+" 則")).join("")||'<p class="mute">尚無資料</p>'}</div>
 <p class="mute">信箱資料由 Claude 依「具體有依據／籠統感想／敷衍或無效」判讀；網頁送出的原因由系統自動判斷（標「自動」），僅供參考。有提出追問：${st.ask} / ${st.xs.length} 人。</p>
+${(()=>{const xs=st.sub.map(r=>[r,r.d[is.id]]).filter(([r,x])=>x.strat1);if(!xs.length)return"";const cnt=(k,L)=>L.map(v=>[v,xs.filter(([r,x])=>x[k]===v).length]).filter(v=>v[1]);const mx=xs.length;
+return`<h2>讀報方法與卡關（第${is.id}期）</h2><div class="grid2" style="display:flex;flex-wrap:wrap;gap:16px"><div style="flex:1;min-width:240px"><p class="mute">最主要的讀報方法</p><div class="bars">${cnt("strat1",STRAT).map(([v,n])=>barRow(v,n/mx,n+" 人")).join("")}</div></div><div style="flex:1;min-width:240px"><p class="mute">最卡住的地方</p><div class="bars">${cnt("stuck",STUCK).map(([v,n])=>barRow(v,n/mx,n+" 人")).join("")}</div></div></div>
+<div class="scroll"><table class="rtab"><tr><th>座號</th><th>姓名</th><th>方法與證據</th><th>卡住</th><th>一句話摘要〈${esc(mainArt(is))}〉</th></tr>${xs.sort((a,b)=>a[0].code.localeCompare(b[0].code)).map(([r,x])=>`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td class="w"><b>${esc(x.strat1)}</b>：${esc(x.stratEv||"")}</td><td>${esc(x.stuck||"")}</td><td class="w">${esc(x.gist||"")}</td></tr>`).join("")}</table></div>`})()}
 <h2>每則原因 <span class="mute">按 ⭐ 選為大屏幕示範（不顯示代號）</span></h2>
 <div class="scroll"><table class="rtab"><tr><th>⭐</th><th>代號</th><th>文章</th><th>原因</th><th>分類</th></tr>${rr.map(o=>{const key=skey(o.c,is.id,o.k);return`<tr><td><button class="star ${S2.has(key)?"on":""}" data-st="${esc(key)}" aria-label="選為示範">★</button></td><td>${esc(o.c)}</td><td>${esc(o.a)}</td><td class="w">${esc(o.w)}</td><td><span class="lv ${o.l}">${LVN[o.l]}</span></td></tr>`}).join("")}</table></div>
 <h2>教師工具</h2>

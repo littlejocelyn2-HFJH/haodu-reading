@@ -12,30 +12,30 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 :root[data-theme="dark"]{--bg:#1b1a16;--card:#24231e;--ink:#efebe0;--mute:#a7a293;--blue:#efebe0;--red:#ec7a5f;--yel:#d9d63a;--sage:#5f7550;--ok:#8cc47f;--line:#efebe0;--hair:#45433b;--mark:#55541c;--chipbg:#d9d63a;--chipfg:#161512;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 var(--disp);position:relative;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:19px/1.85 var(--disp);position:relative;overflow-x:hidden}
 .deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .deco i{position:absolute;border-radius:50%;mix-blend-mode:multiply;opacity:.9}
 .deco .c1{width:min(78vw,620px);aspect-ratio:1;background:var(--yel);top:-12vh;right:-16vw}
 .deco .c2{width:min(70vw,540px);aspect-ratio:1;background:var(--sage);top:38vh;left:-22vw}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .deco i{mix-blend-mode:normal;opacity:.18}}
 :root[data-theme="dark"] .deco i{mix-blend-mode:normal;opacity:.18}
-main{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right,0px)) 72px max(16px,env(safe-area-inset-left,0px))}
+main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right,0px)) 72px max(16px,env(safe-area-inset-left,0px))}
 header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;border-bottom:3px solid var(--ink);padding-bottom:12px}
-h1{margin:0;font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.18em;color:var(--ink);order:1}
-h1 .kick{display:inline-block;background:var(--chipbg);color:var(--chipfg);padding:1px 8px;font-size:12px;letter-spacing:.14em}
+h1{margin:0;font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:.18em;color:var(--ink);order:1}
+h1 .kick{display:inline-block;background:var(--chipbg);color:var(--chipfg);padding:1px 8px;font-size:14px;letter-spacing:.14em}
 h1 .ttl{display:block;margin-top:8px;font-family:var(--disp);font-size:clamp(34px,8vw,60px);font-weight:900;letter-spacing:.04em;line-height:1.1;text-wrap:balance}
-h1 .sub{display:block;margin-top:6px;font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--mute)}
+h1 .sub{display:block;margin-top:6px;font-family:var(--sans);font-size:16px;font-weight:700;letter-spacing:.12em;color:var(--mute)}
 .big{order:2;writing-mode:vertical-rl;font-family:var(--disp);font-size:clamp(64px,13vw,112px);font-weight:900;line-height:1;color:var(--ink);text-shadow:4px 4px 0 var(--yel)}
-h2{font-family:var(--disp);font-size:20px;font-weight:900;margin:0 0 10px;color:var(--ink);letter-spacing:.04em;display:inline;background:linear-gradient(transparent 58%,var(--mark) 58%,var(--mark) 92%,transparent 92%)}
+h2{font-family:var(--disp);font-size:22px;font-weight:900;margin:0 0 10px;color:var(--ink);letter-spacing:.04em;display:inline;background:linear-gradient(transparent 58%,var(--mark) 58%,var(--mark) 92%,transparent 92%)}
 h2+*{margin-top:10px}
 .card{position:relative;background:color-mix(in srgb,var(--card) 92%,transparent);border:1.5px solid var(--ink);border-radius:0;padding:20px 20px 18px;margin:18px 0;box-shadow:none}
 .card::before{content:"";position:absolute;left:-1.5px;right:-1.5px;top:-7px;height:3px;background:var(--ink)}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;font-family:var(--sans)}
-.tab{border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:0;padding:4px 12px;font:700 14px var(--sans);letter-spacing:.05em;cursor:pointer}
+.tab{border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:0;padding:4px 12px;font:700 16px var(--sans);letter-spacing:.05em;cursor:pointer}
 .tab.on{background:var(--chipbg);color:var(--chipfg);border-color:var(--chipbg)}.tab.done::after{content:" ✓"}
-button.go{background:var(--ink);color:var(--bg);border:1.5px solid var(--ink);border-radius:0;padding:10px 26px;font:700 16px var(--sans);letter-spacing:.12em;cursor:pointer}
+button.go{background:var(--ink);color:var(--bg);border:1.5px solid var(--ink);border-radius:0;padding:10px 26px;font:700 18px var(--sans);letter-spacing:.12em;cursor:pointer}
 button.go:hover:not(:disabled){background:var(--yel);color:#161512}button.go:disabled{opacity:.35;cursor:not-allowed}
-button.alt{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:0;padding:6px 16px;font:700 14px var(--sans);letter-spacing:.06em;cursor:pointer}
+button.alt{background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:0;padding:6px 16px;font:700 16px var(--sans);letter-spacing:.06em;cursor:pointer}
 button.alt:hover{background:var(--yel);color:#161512}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
 input[type=text],input[type=password],input[type=number],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--ink);border-radius:0;padding:8px 10px}
@@ -43,33 +43,33 @@ textarea{min-height:64px}
 .opt{display:block;width:100%;text-align:left;margin:6px 0;padding:9px 12px;border:1.5px solid var(--hair);border-left:4px solid var(--ink);border-radius:0;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
 .opt:hover{background:color-mix(in srgb,var(--yel) 30%,var(--card))}
 .opt.right{border-color:var(--ok);border-left-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}.opt.wrong{border-color:var(--red);border-left-color:var(--red);background:color-mix(in srgb,var(--red) 12%,var(--card))}
-.tag{display:inline-block;font:700 12px/1.6 var(--sans);background:var(--chipbg);color:var(--chipfg);border:0;border-radius:0;padding:0 7px;margin-left:8px;letter-spacing:.08em;vertical-align:middle}
-.fb{font-size:14px;margin:4px 0 10px}.mute{color:var(--mute);font-size:14px}
+.tag{display:inline-block;font:700 14px/1.6 var(--sans);background:var(--chipbg);color:var(--chipfg);border:0;border-radius:0;padding:0 7px;margin-left:8px;letter-spacing:.08em;vertical-align:middle}
+.fb{font-size:16px;margin:4px 0 10px}.mute{color:var(--mute);font-size:16px}
 .likert{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}.likert label{border:1.5px solid var(--ink);border-radius:50%;width:2.4em;height:2.4em;display:grid;place-items:center;cursor:pointer;font-family:var(--sans);font-weight:700}.likert input{display:none}.likert label:has(input:checked){background:var(--yel);color:#161512}
-.chk label{display:inline-block;margin:2px 12px 2px 0;font-size:15px}
-table{border-collapse:collapse;font-size:14px;min-width:100%;font-family:var(--sans)}th,td{border-bottom:1px solid var(--hair);padding:5px 8px;text-align:center;white-space:nowrap}th{border-bottom:2px solid var(--ink)}.scroll{overflow-x:auto}
-.wf{display:block;font-size:13px;margin:2px 0 0;color:var(--mute)}.wf.bad{color:var(--red)}.wf.good{color:var(--ok)}
+.chk label{display:inline-block;margin:2px 12px 2px 0;font-size:17px}
+table{border-collapse:collapse;font-size:16px;min-width:100%;font-family:var(--sans)}th,td{border-bottom:1px solid var(--hair);padding:5px 8px;text-align:center;white-space:nowrap}th{border-bottom:2px solid var(--ink)}.scroll{overflow-x:auto}
+.wf{display:block;font-size:15px;margin:2px 0 0;color:var(--mute)}.wf.bad{color:var(--red)}.wf.good{color:var(--ok)}
 .timer{font:900 40px/1 var(--sans);color:var(--ink);letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .alist{display:flex;flex-direction:column;gap:6px}
 .art{text-align:left;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:0;padding:9px 12px;font:inherit;cursor:pointer}
 .art:hover{background:var(--yel);color:#161512}
 .art.off{border-style:dashed;color:var(--mute);cursor:default}.art.off:hover{background:var(--card);color:var(--mute)}
 #lb{position:fixed;inset:0;background:rgba(18,17,14,.95);z-index:50;display:none;flex-direction:column}#lb.on{display:flex}
-#lbbar{display:flex;gap:8px;align-items:center;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));color:#f2efe6;flex-wrap:wrap;border-bottom:3px solid #e4e13b}#lbbar b{flex:1;min-width:120px;font-size:15px}#lbbar button{background:none;border:1.5px solid #f2efe6;color:#f2efe6;border-radius:0;padding:3px 14px;font:700 14px var(--sans);cursor:pointer}
+#lbbar{display:flex;gap:8px;align-items:center;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));color:#f2efe6;flex-wrap:wrap;border-bottom:3px solid #e4e13b}#lbbar b{flex:1;min-width:120px;font-size:17px}#lbbar button{background:none;border:1.5px solid #f2efe6;color:#f2efe6;border-radius:0;padding:3px 14px;font:700 16px var(--sans);cursor:pointer}
 #lbbody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}#lbbody img{display:block;width:100%;margin:0 auto 10px;background:#fff}#lbbody.big img{width:220%;max-width:none}
 
 .tbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 .seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin:8px 0}
-.seat{border:2px dashed var(--line);border-radius:8px;text-align:center;font-size:14px;color:var(--mute);padding:2px 0}
+.seat{border:2px dashed var(--line);border-radius:8px;text-align:center;font-size:16px;color:var(--mute);padding:2px 0}
 .seat.on{border:2px solid var(--ok);background:color-mix(in srgb,var(--ok) 22%,var(--card));color:var(--ink)}
 .bars{display:flex;flex-direction:column;gap:6px;margin:6px 0}
-.bar{display:grid;grid-template-columns:minmax(5em,10em) 1fr 4.5em;gap:8px;align-items:center;font-size:14px}
+.bar{display:grid;grid-template-columns:minmax(5em,10em) 1fr 4.5em;gap:8px;align-items:center;font-size:16px}
 .bar i{display:block;height:16px;border-radius:4px;background:var(--blue)}
 .bar .tr{background:color-mix(in srgb,var(--line) 60%,transparent);border-radius:4px;overflow:hidden}
-.lv{display:inline-block;font-size:12px;border-radius:999px;padding:0 8px;border:1.5px solid currentColor;white-space:nowrap}
+.lv{display:inline-block;font-size:14px;border-radius:999px;padding:0 8px;border:1.5px solid currentColor;white-space:nowrap}
 .lv.A{color:var(--ok)}.lv.B{color:#b8860b}.lv.C{color:var(--red)}.lv.N{color:var(--mute)}
 .rtab td{white-space:normal;text-align:left;vertical-align:top}.rtab td.w{min-width:14em}
-.star{background:none;border:0;font-size:20px;cursor:pointer;color:var(--line);padding:0 4px}.star.on{color:var(--yel)}
+.star{background:none;border:0;font-size:22px;cursor:pointer;color:var(--line);padding:0 4px}.star.on{color:var(--yel)}
 #bs{position:fixed;inset:0;z-index:60;background:var(--bg);color:var(--ink);display:none;flex-direction:column;padding:calc(16px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));overflow:auto}
 #bs.on{display:flex}
 #bs .bh{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -99,7 +99,7 @@ table{border-collapse:collapse;font-size:14px;min-width:100%;font-family:var(--s
 #bs .huge{color:var(--ink);text-shadow:6px 6px 0 var(--yel)}
 #bs .bar i{background:var(--ink)}
 @media (prefers-reduced-motion:no-preference){.deco i{animation:float 18s ease-in-out infinite alternate}.deco .c2{animation-duration:23s}@keyframes float{to{transform:translate(-2vw,3vh)}}}
-@media (max-width:480px){.card{padding:16px 14px}h2{font-size:18px}}
+@media (max-width:480px){.card{padding:16px 14px}h2{font-size:20px}}
 </style></head><body><div class="deco" aria-hidden="true"><i class="c1"></i><i class="c2"></i></div><main>
 <header><h1><span class="kick">好讀周報 × 閱讀素養　READING DIARY</span><span class="ttl">好讀・讀報日記</span><span class="sub">每週十分鐘　讀一份報紙，看見一個世界</span></h1><div class="big" id="bn">讀</div></header>
 <div id="app"></div>
@@ -175,7 +175,7 @@ function fillOk(is,x){const g=x.fillChk?fillGrade(is,x):null;return g?g.filter(B
 function okIssue(is,x){return reflOk(x)&&x.ans.every(a=>a!=null)&&(!is.fill||x.fillChk)&&(!is.open||!evErr(x.open,20))&&(is.id<900||!evErr(x.ask,8))&&x.rank.every(Boolean)&&new Set(x.rank).size===3&&x.why.every(w=>!whyErr(w,x.why))&&x.pre&&x.diff&&x.int&&x.conf}
 function fillHTML(is,x,teacher){const parts=is.fill.text.split("【】"),g=x.fillChk?fillGrade(is,x):null;let h="";
 parts.forEach((t,i)=>{h+=esc(t);if(i<parts.length-1){if(teacher)h+=`<b style="color:var(--ok);border-bottom:2px solid var(--ok);padding:0 4px">${esc(is.fill.ans[i].join("／"))}</b>`;
-else h+=`<input type="text" class="fb" data-fb="${i}" value="${esc((x.fillAns||[])[i]||"")}" ${x.fillChk?"disabled":""} style="display:inline-block;width:${Math.max(4,is.fill.ans[i][0].length+2)}em;padding:2px 6px;margin:2px;${g?(g[i]?"border-color:var(--ok)":"border-color:var(--red)"):""}">${g?(g[i]?"✅":`❌<span style="color:var(--ok);font-size:14px">（${esc(is.fill.ans[i][0])}）</span>`):""}`}});return h}
+else h+=`<input type="text" class="fb" data-fb="${i}" value="${esc((x.fillAns||[])[i]||"")}" ${x.fillChk?"disabled":""} style="display:inline-block;width:${Math.max(4,is.fill.ans[i][0].length+2)}em;padding:2px 6px;margin:2px;${g?(g[i]?"border-color:var(--ok)":"border-color:var(--red)"):""}">${g?(g[i]?"✅":`❌<span style="color:var(--ok);font-size:16px">（${esc(is.fill.ans[i][0])}）</span>`):""}`}});return h}
 
 /* 專注報告：記錄作答期間離開頁面、發呆、貼上次數（不記錄學生在其他網頁做什麼） */
 let lastAct=Date.now(),blurAt=0;
@@ -281,7 +281,7 @@ function startTest(){SB={S,cur,MYB};S={code:"教師試作",ok:true,issues:{}};MY
 function endTest(){stopT();if(SB){S=SB.S;cur=SB.cur;MYB=SB.MYB}SB=null;TEST=false;tmode=true;window.scrollTo(0,0);render()}
 function renderQ(){const app=$("#app");$("#bn").textContent="題";
 app.innerHTML=`<div class="tbtns"><button class="alt" id="qback">← 回教師端</button></div>`+ISS.map(is=>`<div class="card"><h2>第${is.id}期 ${is.date}</h2>
-<p><b>報導</b>（點開檢查版面）</p><div class="alist">${is.arts.map(a=>PG[a]?`<button class="art" data-a="${esc(a)}">📰 ${esc(a)}${PG[a].length>1?`<span class="tag">${PG[a].length}頁</span>`:""}<span class="mute" style="font-size:12px">　${PG[a].join("、")}.jpg</span></button>`:`<span class="art off">${esc(a)}<span class="tag">沒有版面圖</span></span>`).join("")}</div>
+<p><b>報導</b>（點開檢查版面）</p><div class="alist">${is.arts.map(a=>PG[a]?`<button class="art" data-a="${esc(a)}">📰 ${esc(a)}${PG[a].length>1?`<span class="tag">${PG[a].length}頁</span>`:""}<span class="mute" style="font-size:14px">　${PG[a].join("、")}.jpg</span></button>`:`<span class="art off">${esc(a)}<span class="tag">沒有版面圖</span></span>`).join("")}</div>
 ${is.qs.map((q,i)=>`<div style="margin-top:12px"><b>${i+1}.</b> ${esc(q[0]).replace(/\n/g,"<br>")}<span class="tag">${q[3]}</span>${q[1].map((o,k)=>`<div class="opt ${k===q[2]?"right":""}" style="cursor:default">${"ＡＢＣＤ"[k]}　${esc(o)}${k===q[2]?"　✅ 正確答案":""}</div>`).join("")}${q[4]?`<div class="mute">💡 解析：${esc(q[4])}</div>`:""}</div>`).join("")}${is.open?`<div style="margin-top:12px"><b>開放題</b><span class="tag">${is.open.ab}</span><p>${esc(is.open.q)}</p>${is.open.ref.map(r=>`<div class="mute"><b>參考答案：${esc(r[0])}</b><br>${esc(r[1])}</div>`).join("")}</div>`:""}${is.fill?`<div style="margin-top:12px"><b>填空題</b><span class="tag">${is.fill.ab}</span><p style="line-height:2">${fillHTML(is,{},true)}</p></div>`:""}</div>`).join("");
 $("#qback").onclick=()=>{QV=false;render()};document.querySelectorAll(".art[data-a]").forEach(b=>b.onclick=()=>openLb(b.dataset.a))}
 function render(){const app=$("#app");
@@ -292,14 +292,14 @@ if(!S.ok){const reg=LS.get("hd_reg",{});
 app.innerHTML=`<div class="card"><h2>歡迎來到讀報日記</h2><p>每週花 10–15 分鐘讀好讀周報，回答幾題、選出你最愛的報導，最後會畫出屬於你的閱讀能力圖。</p><p class="mute">資料只給老師了解大家的閱讀情形，不會公開。</p><p class="mute">🎯 送出後會有你的「專注報告」：網頁會記錄作答時離開頁面、停頓和貼上的次數（不會知道你在其他網頁做什麼）。</p>
 <p>請填寫你的班級、座號和姓名</p><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="cls" style="flex:1;min-width:110px"><option value="">班級</option>${CLASSES.map(c=>`<option ${c===reg.cls?"selected":""}>${c}</option>`).join("")}</select><select id="seat" style="flex:1;min-width:110px"><option value="">座號</option>${Array.from({length:40},(_,i)=>String(i+1).padStart(2,"0")).map(n=>`<option ${n===reg.seat?"selected":""}>${n}</option>`).join("")}</select><input type="text" id="nm" placeholder="姓名" value="${esc(reg.name||"")}" style="flex:2;min-width:140px"></div>
 <p><label><input type="checkbox" id="cons"> 我了解並同意將作答資料提供給老師參考</label></p><button class="go" id="start">開始</button>
-<p style="margin-top:22px"><a href="#teacher" id="tgo" style="color:var(--mute);font-size:14px">我是老師，先略過，直接進教師端 →</a></p></div>
+<p style="margin-top:22px"><a href="#teacher" id="tgo" style="color:var(--mute);font-size:16px">我是老師，先略過，直接進教師端 →</a></p></div>
 ${API?"":`<p class="mute">⚠️ 尚未連接試算表（本機模式），作答只會存在這台電腦。</p>`}`;
 $("#tgo").onclick=e=>{e.preventDefault();tmode=true;render()};
 $("#start").onclick=()=>{const a=$("#cls").value,b=$("#seat").value,n=$("#nm").value.trim();if(!a||!b||!n)return alert("請選擇班級、座號，並填寫姓名");if(!$("#cons").checked)return alert("請勾選同意");
 const c=a+"-"+b;if(c!==S.code&&!confirm("你是 "+c+" "+n+" 嗎？"))return;LS.set("hd_reg",{cls:a,seat:b,name:n});S.code=c;S.name=n;S.ok=true;loadMine();render()};return}
 const x=I(cur),is=ISS.find(i=>i.id===cur);$("#bn").textContent=String(ISS.indexOf(is)+1);
 if(!x.t0)x.t0=Date.now();
-const codeCard=LASTCODE?`<div class="card" style="border-color:var(--red)"><h2>⚠️ 沒有送到老師端</h2><p>請按「複製」，把這段成績碼貼給老師（Classroom 私人留言），老師可以幫你匯入。</p><textarea id="lcode" readonly style="min-height:80px;font-size:12px">${LASTCODE}</textarea><p><button class="alt" id="lcopy">複製成績碼</button></p></div>`:"";
+const codeCard=LASTCODE?`<div class="card" style="border-color:var(--red)"><h2>⚠️ 沒有送到老師端</h2><p>請按「複製」，把這段成績碼貼給老師（Classroom 私人留言），老師可以幫你匯入。</p><textarea id="lcode" readonly style="min-height:80px;font-size:14px">${LASTCODE}</textarea><p><button class="alt" id="lcopy">複製成績碼</button></p></div>`:"";
 let h=codeCard+(!TEST?`<p class="mute" style="margin:0 0 8px">👤 ${esc(S.code)} ${esc(S.name||"")}　<a href="#" id="rereg" style="color:var(--mute)">不是我？重新登記</a></p>`:"")+(TEST?`<div class="card" style="border-color:var(--yel);background:color-mix(in srgb,var(--yel) 18%,var(--card))"><b>🧪 教師試作模式</b>：可以完整作答、看回饋與能力圖，但<b>不會送出、不會寄信、不會留下資料</b>。 <button class="alt" id="tend">結束試作，回教師端</button></div>`:"")+`<div class="tabs">${ISS.map(i=>`<button class="tab ${i.id===cur?"on":""} ${S.issues[i.id]?.done?"done":""}" data-i="${i.id}">第${i.id}期 ${i.date}</button>`).join("")}</div>`;
 h+=`<div class="card"><h2>① 讀報計時</h2><div class="timer" id="tm">${fmt(x.sec)}</div><p class="mute">開始讀報時按「開始」，讀完按「停止」。目標 10–15 分鐘。</p><button class="alt" id="tbtn">${tick?"停止":"開始"}</button></div>`;
 h+=`<div class="card"><h2>② 先來讀報</h2><p class="mute">點一篇報導打開版面，按「放大」可以看清楚小字。</p><div class="alist">${is.arts.map(a=>PG[a]?`<button class="art" data-a="${esc(a)}">📰 ${esc(a)}${PG[a].length>1?`<span class="tag">${PG[a].length}頁</span>`:""}</button>`:`<span class="art off">${esc(a)}<span class="tag">版面尚未放入</span></span>`).join("")}</div></div>`;
@@ -315,7 +315,7 @@ ${x.strat1?`<p class="mute" style="margin:6px 0 2px">✍️ ${STRAT_EV[x.strat1]
 const okAll=okIssue(is,x);
 h+=`<p><button class="go" id="sub" ${okAll?"":"disabled"}>${x.done?"更新送出":"送出本期紀錄"}</button> <span class="mute" id="msg">${okAll?"":"請完成所有題目（含填空題、說說看法）、三個名次、具體的原因、量表，以及讀報方法、卡住的地方、一句話摘要和印象深刻的句子"}</span></p>`;
 if(x.done&&x.focus){const fs=focusScore(is,x),f=x.focus,hist=ISS.filter(i=>S.issues[i.id]&&S.issues[i.id].done&&S.issues[i.id].focus);
-h+=`<div class="card"><h2>🎯 我的專注報告（第${is.id}期）</h2><p style="margin:4px 0"><span style="font-size:44px;font-weight:900;color:var(--blue)">${fs}</span> 分　<span style="font-size:20px">${focusLv(fs)}</span></p>
+h+=`<div class="card"><h2>🎯 我的專注報告（第${is.id}期）</h2><p style="margin:4px 0"><span style="font-size:44px;font-weight:900;color:var(--blue)">${fs}</span> 分　<span style="font-size:22px">${focusLv(fs)}</span></p>
 <div class="bars">${barRow("讀報計時",Math.min(1,(x.sec||0)/600),Math.round((x.sec||0)/60)+" 分")}${barRow("作答總時間",Math.min(1,(x.elapsed||0)/900),Math.round((x.elapsed||0)/60)+" 分")}${barRow("離開網頁",Math.min(1,f.away/5),f.away+" 次")}${barRow("發呆時間",Math.min(1,f.idleSec/180),f.idleSec+" 秒")}${barRow("貼上文字",Math.min(1,f.paste/3),f.paste+" 次")}</div>
 <p><b>給你的建議</b></p><ul style="margin:0;padding-left:20px">${focusTips(is,x).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
 ${hist.length>1?`<p class="mute" style="margin-top:8px">每期專注指數：${hist.map(i=>`第${i.id}期 <b>${focusScore(i,S.issues[i.id])}</b>`).join("　→　")}</p>`:""}</div>`}
@@ -377,10 +377,10 @@ return`<div class="card"><h2>👩‍🏫 老師端（只有你看得到）</h2><
 <div class="seats">${ROSTER["902"].map(x=>`<span class="seat ${got.has(x)?"on":""}">${x}</span>`).join("")}</div>
 <p class="mute">${miss.length?"未交座號："+miss.join("、"):"全班都交了！"}${Object.keys(st.cls).filter(k=>k!=="902").map(k=>`　另有 ${k} 班 ${st.cls[k].size} 人`).join("")}</p>
 <h2>學生類型（第${is.id}期）</h2>
-<div class="tbtns">${TYN.map(t=>`<span class="lv ${TYC[t]}" style="font-size:14px;padding:2px 10px">${t} ${st.sub.filter(r=>typeOf(r.code,is,r.d[is.id]).t===t).length} 人</span>`).join("")}</div>
+<div class="tbtns">${TYN.map(t=>`<span class="lv ${TYC[t]}" style="font-size:16px;padding:2px 10px">${t} ${st.sub.filter(r=>typeOf(r.code,is,r.d[is.id]).t===t).length} 人</span>`).join("")}</div>
 <p class="mute">${TYN.map(t=>t+"："+TYD[t]).join("；")}。系統依原因品質、讀報時間、答對題數自動判斷，可直接用下拉選單修改。</p>
 <div class="scroll"><table class="rtab"><tr><th>座號</th><th>姓名</th><th>類型</th><th>答對</th><th>填空</th><th>讀報</th><th>用時</th><th>專注</th><th>提醒</th><th>原因品質</th></tr>${st.sub.slice().sort((a,b)=>a.code.localeCompare(b.code)).map(r=>{const x=r.d[is.id],ty=typeOf(r.code,is,x),k=r.code+"|"+is.id;
-return`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td><select data-ty="${esc(k)}" style="width:auto;padding:2px 6px">${TYN.map(t=>`<option ${t===ty.t?"selected":""}>${t}</option>`).join("")}</select> ${ty.t==="認真型"?"🏅 ":""}<span class="mute" style="font-size:12px">${ty.man?"老師修改":"自動"}</span>${ty.man?` <button class="star" data-tyr="${esc(k)}" title="改回自動判斷" style="font-size:13px;color:var(--mute)">↺</button>`:""}</td><td>${score(is,x)}/3</td><td>${is.fill?(x.fillChk?fillOk(is,x)+"/"+is.fill.ans.length:"–"):""}</td><td>${Math.round((x.sec||0)/60)} 分</td><td>${x.elapsed!=null?x.elapsed+" 秒":"–"}</td><td>${(()=>{const fs=focusScore(is,x);return fs==null?"–":`<b>${fs}</b><br><span class="mute" style="font-size:12px">離${x.focus.away}次·呆${x.focus.idleSec}秒·貼${x.focus.paste}</span>`})()}</td><td>${isSus(is,x)?'<span class="lv C">疑似亂答</span>':""}${(focusScore(is,x)??100)<55?' <span class="lv B">疑似分心</span>':""}</td><td>${(x.lvl||[]).map(l=>`<span class="lv ${l}">${LVN[l].slice(0,2)}</span>`).join(" ")}${x.autoLvl?' <span class="mute" style="font-size:12px">（自動）</span>':""}</td></tr>`}).join("")}</table></div>
+return`<tr><td>${esc(r.code)}</td><td>${esc(NAMES[r.code]||"")}</td><td><select data-ty="${esc(k)}" style="width:auto;padding:2px 6px">${TYN.map(t=>`<option ${t===ty.t?"selected":""}>${t}</option>`).join("")}</select> ${ty.t==="認真型"?"🏅 ":""}<span class="mute" style="font-size:14px">${ty.man?"老師修改":"自動"}</span>${ty.man?` <button class="star" data-tyr="${esc(k)}" title="改回自動判斷" style="font-size:15px;color:var(--mute)">↺</button>`:""}</td><td>${score(is,x)}/3</td><td>${is.fill?(x.fillChk?fillOk(is,x)+"/"+is.fill.ans.length:"–"):""}</td><td>${Math.round((x.sec||0)/60)} 分</td><td>${x.elapsed!=null?x.elapsed+" 秒":"–"}</td><td>${(()=>{const fs=focusScore(is,x);return fs==null?"–":`<b>${fs}</b><br><span class="mute" style="font-size:14px">離${x.focus.away}次·呆${x.focus.idleSec}秒·貼${x.focus.paste}</span>`})()}</td><td>${isSus(is,x)?'<span class="lv C">疑似亂答</span>':""}${(focusScore(is,x)??100)<55?' <span class="lv B">疑似分心</span>':""}</td><td>${(x.lvl||[]).map(l=>`<span class="lv ${l}">${LVN[l].slice(0,2)}</span>`).join(" ")}${x.autoLvl?' <span class="mute" style="font-size:14px">（自動）</span>':""}</td></tr>`}).join("")}</table></div>
 <h2>答題</h2><div class="bars">${is.qs.map((q,i)=>barRow("第"+(i+1)+"題・"+q[3],st.qr[i],Math.round(st.qr[i]*100)+"%")).join("")}</div>
 <h2>原因品質</h2><div class="bars">${["A","B","C","N"].filter(l=>st.lv[l]).map(l=>barRow(LVN[l],st.lv[l]/lvT,st.lv[l]+" 則")).join("")||'<p class="mute">尚無資料</p>'}</div>
 <p class="mute">信箱資料由 Claude 依「具體有依據／籠統感想／敷衍或無效」判讀；網頁送出的原因由系統自動判斷（標「自動」），僅供參考。最後一題（第899期前為追問、第900期起為印象深刻的句子）有寫：${st.ask} / ${st.xs.length} 人。</p>
